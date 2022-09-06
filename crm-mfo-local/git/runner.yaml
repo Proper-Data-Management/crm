@@ -1,0 +1,26 @@
+
+gitlabUrl: https://gitlab.com/
+runnerRegistrationToken: "j3GvJSfdLiAQaGDK38K6"
+replicas: 2
+init:
+  image: busybox
+  tag: latest
+
+concurrent: 5
+checkInterval: 30
+privileged: true 
+
+rbac:
+    serviceAccountName: gitlab
+    clusterWideAccess: true
+    create: true
+
+runners:
+    serviceAccountName: gitlab
+    privileged: true
+
+
+
+# helm install runner --namespace gitlab  gitlab/gitlab-runner  -f k8s/runner-chart-values.yaml
+#  helm repo add gitlab https://charts.gitlab.io
+# 

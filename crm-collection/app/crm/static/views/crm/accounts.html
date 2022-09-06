@@ -1,0 +1,135 @@
+<!-- BEGIN PAGE HEADER-->
+
+
+<section class="clearfix container-fluid" id="section-basics"
+		 ng-init="init({currentPage:1,perPage:25,table_name:'accounts'})"
+		 ng-controller="SimpleTableController">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Accounts</translate>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<a href="#/crm/accountdetails/0" class="btn blue btn-fit-height" >
+				<i class="fa fa-plus"></i> <translate>New account</translate>
+			</a>
+			<button type="button" class="btn btn-fit-height red dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" translate>
+			Actions <i class="fa fa-angle-down"></i>
+			</button>
+			<ul class="dropdown-menu pull-right" role="menu">
+				<ng-include src="'views/blocks/simpletable-select-actions.html'" >
+				</ng-include>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--SAMPLE NOTE:-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="table-responsive">
+						<table st-table="rowCollection"  class="table table-striped">
+							<thead>
+							<tr>
+								<th translate>Name</th>
+								<th translate>Phone</th>
+								<th translate>Web Site</th>
+								<th translate>Email</th>
+								<th translate>IIN</th>
+							</tr>
+							</thead>
+							<tbody>
+
+							<tr ng-repeat="row in rowCollection">
+								<td>
+									<ng-include src="'views/blocks/simpletable-select-checkbox-row.html'"></ng-include>
+									<a class="btn btn-xs" href="#/crm/accountdetails/{{row.id}}/?p[]=page::{{currentPage}}"> <u>{{row.name}}</u></a>
+
+
+								</td>
+								<td>
+									{{row.phones | split:';':0}}
+
+									{{row.phones | split:';':1}}
+
+									{{row.phones | split:';':2}}
+								</td>
+								<td>{{row.website}}</td>
+								<td>
+									{{row.emails | split:';':0}}
+
+									{{row.emails | split:';':1}}
+
+									{{row.emails | split:';':2}}
+								</td>
+								<td>{{row.iin}}</td>
+							</tr>
+							</tbody>
+
+							<tfoot>
+							<tr>
+								<td colspan="5" class="text-center">
+									<div ng-include="'views/blocks/simpletable-pagination.html'"></div>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams,SimpleTableController) {
+
+		//$controller('TestCtrl1',{$scope : SimpleTableController });
+		//var testCtrl1ViewModel = $controller('DashboardController');
+
+		$scope.simpleTable =SimpleTableController;
+
+		/*$scope.simpleTable.init({
+		currentPage :1,
+		perPage : 25,
+		table_name : "accounts"}
+		);
+		$scope.simpleTable.bind();*/
+
+		/*Put Your Customizations Here...*/
+
+		$scope.removeAll = function removeAll(){
+
+			if (confirm ("Remove All?"))
+			{
+				$http.get('../restapi/accounts/removeall').
+						success(function(data) {
+							// here the data from the api is assigned to a variable named users
+							$scope.bind($scope.perPage,$scope.pageUrl);
+							alert("All removed!");
+						});
+			}
+		}
+
+		/*End Customizations...*/
+
+
+	}
+</script>
+
+<!-- END MAIN CONTENT -->

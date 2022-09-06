@@ -1,0 +1,48 @@
+<div class="row" ng-controller="WidgetCustom02Ctrl">
+
+<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" ng-repeat="item in widget_custom_02.items">
+    <div class="portlet light ">
+        <div class="portlet-title">
+            <div class="caption caption-md">
+                <i class="icon-bar-chart font-green-haze hide"></i>
+                <span class="caption-subject font-green-haze bold uppercase" translate>{{item.title}}</span>
+                <span class="caption-helper hide" translate>weekly stats...</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row list-separated">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="font-grey-mint font-sm" translate>Amount</div>
+                    <div class="uppercase font-hg font-red-flamingo">
+                       {{item.amount}} <span class="font-lg font-grey-mint" translate>tenge</span>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="font-grey-mint font-sm" translate>
+                        Count
+                    </div>
+                    <div class="uppercase font-hg font-blue-sharp">
+                        {{item.cnt}} <span class="font-lg font-grey-mint"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function WidgetCustom02Ctrl($scope,$http){
+
+    $scope.runWidget = function runWidget(config){
+            $http.get(config.url+"&code="+config.name).
+                    success(function (data) {
+                        $scope[config.name] = data
+                    });
+        }
+
+    $scope.runWidget({name:'widget_custom_02',url:'../restapi/widget/get?bla=bla'});
+
+    }
+</script>
+

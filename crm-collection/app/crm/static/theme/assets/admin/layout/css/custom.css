@@ -1,0 +1,197 @@
+/* here you can put your own css to customize and override the theme */
+
+/***
+Rounded Portlets
+***/
+/*
+.portlet {
+	border-radius: 4px !important;
+}
+
+.portlet .portlet-title {
+	border-radius: 4px 4px 0px 0px !important;
+}
+
+.portlet .portlet-body,
+.portlet .portlet-body .form-actions  {
+	border-radius: 0px 0px 4px 4px !important;
+}
+*/
+
+/*
+Change Quick Sidebar Width
+*/
+
+/*
+.page-quick-sidebar-wrapper {
+  right: -370px;
+  width: 370px;
+}
+
+.page-quick-sidebar-open.page-quick-sidebar-push-content .page-sidebar-wrapper {
+  margin-left: -370px;
+}
+
+.page-quick-sidebar-open.page-quick-sidebar-push-content .page-footer {
+  margin-right: 370px;
+  margin-left: -370px;
+}
+
+.page-sidebar-reversed.page-quick-sidebar-open.page-quick-sidebar-push-content .page-sidebar-wrapper {
+  margin-right: 370px;
+}
+
+.page-quick-sidebar-open.page-quick-sidebar-push-content.page-quick-sidebar-full-height .page-header {
+  margin-left: -370px;
+}
+
+.page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-list {
+  width: 370px !important;
+}
+
+.page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-item {
+  width: 370px !important;
+  margin-left: 370px;
+}
+
+.page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-content-item-shown .page-quick-sidebar-list {
+  margin-left: -370px;
+}
+*/
+
+
+/***
+Chat Panel
+***/
+.chat-panel {
+    width: 420px;
+    z-index: 999;
+    float: right;
+    position: relative;
+    /* content solid bg color */
+}
+
+.chat-panel > .toggler {
+    position : fixed;
+    right : 20px;
+    bottom : 20px;
+    z-index : 999;
+    /*top: 460px;
+    right: 0;*/
+    padding: 20px;
+    cursor: pointer;
+    background: #d5dade center no-repeat;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+.chat-panel > .toggler:hover {
+    background-color: #0b94ea !important;
+}
+.chat-panel > .toggler-close {
+    display: none;
+    top: 4px;
+    right: 0;
+    padding: 20px;
+    z-index: 101;
+    cursor: pointer;
+    position: absolute;
+    background:  url(../img/icon-color-close.png) center no-repeat !important;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+.chat-panel > .toggler-close:hover {
+    background-color: #222 !important;
+}
+
+.chat-panel > .theme-options {
+    position : fixed;
+    right : 0;
+    bottom : 0;
+    z-index : 999;
+    padding : 0;
+    display: none;
+    background: #3d3d3d;
+    box-shadow: 5px 5px rgba(61, 61, 61, 0.1);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+.chat-panel > .theme-options > .panel {
+    margin-bottom: 0;
+}
+.chat-panel > .theme-options > .theme-option {
+    color: #cfcfcf;
+    padding: 10px;
+    border-top: 1px solid #444;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.chat-panel > .theme-options > .theme-option > span {
+    text-transform: uppercase;
+    display: inline-block;
+    width: 145px;
+    font-size: 13px;
+    font-weight: 300;
+}
+.chat-panel > .theme-options > .theme-option > select.form-control {
+    display: inline;
+    width: 135px;
+    padding: 2px;
+    text-transform: lowercase;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors {
+    border-top: 0;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > span {
+    display: block;
+    width: auto;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul {
+    list-style: none;
+    padding: 0;
+    display: block;
+    margin-bottom: 10px !important;
+    margin-top: 15px;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li {
+    width: 40px;
+    height: 40px;
+    margin: 0 4px;
+    cursor: pointer;
+    list-style: none;
+    float: left;
+    border: solid 1px #707070;
+    /* theme colors */
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li:first-child {
+    margin-left: 0;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li:hover, .chat-panel > .theme-options > .theme-option.theme-colors > ul > li.current {
+    border: solid 2px #d64635;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-default {
+    background: #333438;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-darkblue {
+    background: #2b3643;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-blue {
+    background: #2D5F8B;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-grey {
+    background: #697380;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-light {
+    background: #F9FAFD;
+}
+.chat-panel > .theme-options > .theme-option.theme-colors > ul > li.color-light2 {
+    background: #F1F1F1;
+}

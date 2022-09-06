@@ -1,0 +1,27 @@
+<li ng-if="!getSelectRecordState()">
+    <a ng-click="bind()">
+        <i class="fa fa-refresh"></i> <translate>Refresh</translate> </a>
+</li>
+
+<li ng-if="!getSelectRecordState()">
+    <a ng-click="selectRecords()">
+        <i class="icon-user"></i> <translate>Select records</translate> </a>
+</li>
+<li ng-if="getSelectRecordState()">
+    <a ng-click="deselectRecords()">
+        <i class="icon-user"></i> <translate>Cancel Select records</translate> </a>
+</li>
+<li ng-if="((session_roles.admin) && (table_name))">
+    <a ng-click="editQuery(table_name)">
+        <i class="fa fa-cube"></i> <translate>Edit Query</translate> </a>
+</li>
+<li>
+
+    <a target="_self" href="../exportall/?code={{table_name}}&param1={{id}}" download="{{table_name}}.xlsx">
+        <i class="icon-remove"></i> <translate>Export All Records to Excel</translate> </a>
+</li>
+
+<li ng-if="getSelectRecordState()">
+    <a ng-click="deleteSelectedRecord()">
+        <i class="icon-remove"></i> <translate>Delete selected records</translate> </a>
+</li>

@@ -1,0 +1,169 @@
+stages:
+# - test
+- build
+- release
+- tagging
+# - validate
+# - approve
+- deploy
+
+variables:
+  ECOSYSTEM: onetech
+
+
+build:
+  stage: build
+  image: registry.dar.kz/cicd/job-images/hugo:stable
+  variables:
+    HUGO_THEME: learn
+  script:
+  - cp -a . /app/content/
+  - cd /app
+  - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.dar.kz/dareco/hugo-themes/${HUGO_THEME}.git".insteadOf git@git.dar.kz:dareco/hugo-themes/${HUGO_THEME}.git
+  - git clone git@git.dar.kz:dareco/hugo-themes/${HUGO_THEME}.git
+  - (ls ${HUGO_THEME}/exampleSite/config.toml) && rm config.toml && cp ${HUGO_THEME}/exampleSite/config.toml config.toml
+  - (ls content/config.toml) && rm config.toml && cp content/config.toml config.toml || echo "toml file not found in content folder"
+  - mv ${HUGO_THEME} themes
+  - git init
+  - git config user.email "${GITLAB_USER_EMAIL}"
+  - git config user.name "${GITLAB_USER_NAME}"
+  - git add content/
+  - git commit -m "initial commit"
+  - hugo
+  - cp -a ./public/ /builds/${CI_PROJECT_PATH}/public/
+  - cd /builds/${CI_PROJECT_PATH}
+  - echo -e "FROM registry.dar.kz/cicd/base-images/nginx \nCOPY . /usr/share/nginx/html" > public/Dockerfile
+  artifacts:
+    paths:
+    - public/ # scala-2.12/app.jar
+    expire_in: 45min
+
+release_dev:
+  stage: release
+  image: docker:stable
+  services:
+  - docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  script:
+  - cd public/
+  - cat Dockerfile
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - docker build -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}" .
+  - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA:0:8}"
+  only:
+    refs:
+    - develop
+
+release_qa:
+  stage: release
+  image: docker:stable
+  services:
+  - docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  script:
+  - cd public/
+  - export TAG=$(echo "${CI_COMMIT_REF_NAME}" | egrep -o "v[0-9]+(\.[0-9]+)+")-${CI_COMMIT_SHA:0:8}
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - docker build -t "${CI_REGISTRY_IMAGE}:${TAG}" .
+  - docker push "${CI_REGISTRY_IMAGE}:${TAG}"
+  only:
+  - /^release\/.*$/
+
+release_prod:
+  stage: release
+  image: docker:stable
+  services:
+  - docker:dind
+  variables:
+    GIT_STRATEGY: none
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  script:
+  - cd public/
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - docker build -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}" .
+  - docker push "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+  only:
+    refs:
+    - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+
+tagging_dev:
+  stage: tagging
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - /opt/scripts/docker/tagging.sh ${CI_COMMIT_SHA:0:8}
+  environment:
+    name: dev
+  only:
+  - develop
+
+tagging_qa:
+  stage: tagging
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - /opt/scripts/docker/tagging.sh $(echo "${CI_COMMIT_REF_NAME}" | egrep -o "v[0-9]+(\.[0-9]+)+")-${CI_COMMIT_SHA:0:8}
+  environment:
+    name: qa
+  only:
+  - /^release\/.*$/
+
+tagging_prod:
+  stage: tagging
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+  script:
+  - /opt/scripts/docker/tagging.sh ${CI_COMMIT_TAG}
+  environment:
+    name: prod
+  only:
+  - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/
+
+deploy_to_dev:
+  stage: deploy
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: dev
+  only:
+  - develop
+
+deploy_to_qa:
+  stage: deploy
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: qa
+  only:
+  - /^release\/.*$/
+
+deploy_to_prod:
+  stage: deploy
+  image: registry.dar.kz/cicd/job-images/codemill
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: prod
+  only:
+  - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/

@@ -1,0 +1,78 @@
+
+- name: Set variable  
+  hosts: master_node
+  tasks:
+  - debug:
+      msg: |
+       "{% for host in groups['master_node'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endfor %}"
+
+- hosts: "master_node"
+  become: yes
+  become_user: root
+  roles:
+    - role: elasticsearch
+  vars:
+    network:
+       bind_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+       publish_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    es_heap_size: "512m"
+    es_config:
+      node.name: "elastic01"
+      cluster.name: "alfa-cluster"
+      cluster.initial_master_nodes: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+      discovery.seed_hosts: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:9300"
+      http.port: 9200
+      node.data: false
+      node.master: true
+      bootstrap.memory_lock: false
+    es_plugins:
+     - plugin: ingest-attachment
+     - plugin: analysis-phonetic
+
+
+- hosts: "data_node_1"
+  become: yes
+  become_user: root
+  roles:
+    - role: elasticsearch
+  vars:
+    es_heap_size: "512m"
+    network:
+       bind_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+       publish_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    es_data_dirs:
+      - "/opt/elasticsearch"
+    es_config:
+      node.name: "elastic02"
+      cluster.name: "alfa-cluster"
+      cluster.initial_master_nodes:  "{{elk_master}}" ##master node IP
+      discovery.seed_hosts: "{{elk_master}}"   ##master node IP
+      http.port: 9200
+      node.data: true
+      node.master: false
+      bootstrap.memory_lock: false
+    es_plugins:
+      - plugin: ingest-attachment
+      - plugin: analysis-phonetic
+
+- hosts: "data_node_2"
+  become: yes
+  become_user: root
+  roles:
+    - role: elasticsearch
+  vars:
+    es_heap_size: "512m"
+    network:
+       bind_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+       publish_host: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+    es_config:
+      node.name: "elastic03"
+      cluster.name: "alfa-cluster"
+      discovery.seed_hosts:  "{{elk_master}}"  ##master node IP
+      http.port: 9200
+      node.data: true
+      node.master: false
+      bootstrap.memory_lock: false
+    es_plugins:
+      - plugin: ingest-attachment
+      - plugin: analysis-phonetic

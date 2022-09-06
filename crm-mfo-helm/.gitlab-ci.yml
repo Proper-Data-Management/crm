@@ -1,0 +1,110 @@
+# This file is a template, and might need editing before it works on your project.
+# Official Java image. Look for the different tagged releases at
+# https://hub.docker.com/r/library/java/tags/ . A Java image is not required
+# but an image with a JVM speeds up the build a bit.
+
+stages:
+- lint 
+- package 
+# - publish
+# - tagging
+# - validate
+- deploy
+
+image: registry.dar.kz/cicd/job-images/codemill
+
+variables:
+  ECOSYSTEM: onetech
+
+  
+lint_dev:
+  stage: lint   
+  script:
+  - /opt/scripts/helm/lint.sh  
+  environment:
+    name: dev        
+  only:
+    - develop  
+
+lint_qa:
+  stage: lint 
+  script:
+  - /opt/scripts/helm/lint.sh  
+  environment:
+    name: qa
+  only:
+    refs:
+    - /^release\/.*$/  
+
+lint_prod:
+  stage: lint 
+  script:
+  - /opt/scripts/helm/lint.sh  
+  environment:
+    name: prod
+  only:
+    - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/ 
+
+package_dev:
+  stage: package 
+  script:
+  - /opt/scripts/helm/package.sh ${CI_COMMIT_SHA:0:8}
+  environment:
+    name: dev        
+  only:
+    - develop
+
+package_qa:
+  stage: package 
+  script:
+  - /opt/scripts/helm/package.sh $(echo "${CI_COMMIT_REF_NAME}" | egrep -o "v[0-9]+(\.[0-9]+)+")-${CI_COMMIT_SHA:0:8}
+  environment:
+    name: qa        
+  only:
+    refs:
+    - /^release\/.*$/
+
+package_prod:
+  stage: package 
+  script:
+  - /opt/scripts/helm/package.sh ${CI_COMMIT_TAG}
+  environment:
+    name: prod        
+  only:
+    - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/ 
+
+deploy_to_dev:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: dev
+  only:
+  - develop
+
+deploy_to_qa:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: qa
+  only:
+  - /^release\/.*$/
+
+deploy_to_prod:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    KUBE_SERVER: k8s-api-01.dar.kz
+  script:
+  - /opt/scripts/helm/deploy.sh
+  environment:
+    name: prod
+  only:
+  - /^v(\d+\.)?(\d+\.)?(\*|\d+)$/

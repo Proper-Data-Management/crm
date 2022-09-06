@@ -1,0 +1,12 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crm3-crm-collection-new
+spec:
+  destination:
+    namespace: dev-forte-?
+  project: dev-forte-?
+  source:
+    path: apps/crm3-crm-collection-new/overlays/dev
+    targetRevision: develop

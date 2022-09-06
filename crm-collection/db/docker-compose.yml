@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10.4.10
+    volumes:
+      - ./my.cnf:/etc/mysql/my.cnf
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: damucrm
+      MYSQL_USER: damucrm
+      MYSQL_PASSWORD: jkdfssd766776gxA!
+    restart: always

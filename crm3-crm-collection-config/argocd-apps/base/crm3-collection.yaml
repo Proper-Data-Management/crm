@@ -1,0 +1,18 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crm3-crm-collection-new
+spec:
+  destination:
+    namespace: base-forte-?
+#    server: https://kubernetes.default.svc
+  project: base-forte-?
+  source:
+    path: apps/crm3-crm-collection-new/overlays/base
+    repoURL: https://git.dar.kz/crediton-3/crm3-crm-collection-config
+    targetRevision: develop
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

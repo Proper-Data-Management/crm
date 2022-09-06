@@ -1,0 +1,240 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<a href="#/settings/details" translate>Details</a>
+			<i class="fa fa-angle-right"></i>
+			{{detail.title}}
+
+		</li>
+
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button ng-if="editing" class="btn btn-primary" ng-click="save()" translate>Save</button>
+			<button ng-if="editing" class="btn btn-warning" ng-click="cancel()" translate>Cancel</button>
+			<button ng-if="!editing" class="btn btn-warning" translate>Saved</button>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE SAMPLE:.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="portlet-body form">
+						<form role="form">
+							<div class="form-body">
+								<div class="form-group">
+									<label translate>Code</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" ng-model= "detail.code" class="form-control" placeholder="{{ 'Code' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label translate>Title</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" type="text" ng-model= "detail.title" class="form-control" placeholder="{{ 'Title' | translate }}" >
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<!-- BEGIN DETAIL-->
+<section class="clearfix container-fluid" id="section-basics1"
+		 ng-init="init({currentPage:1,perPage:25,table_name:'detail_queries'})"
+		 ng-controller="SimpleDetailTableController">
+
+	<!-- END PAGE HEADER-->
+	<!-- BEGIN MAIN CONTENT -->
+	<div class="row">
+		<div class="col-md-12">
+			<!--<div class="note note-danger">-->
+			<!--<p>-->
+			<!--SAMPLE NOTE:-->
+			<!--</p>-->
+			<!--</div>-->
+			<!-- Begin: life time stats -->
+			<div class="portlet">
+				<div class="portlet-body">
+						<div class="tabbable-custom ">
+							<ul class="nav nav-tabs ">
+								<li class="active">
+									<a data-target="#tab_5_1" data-toggle="tab" aria-expanded="true" translate>
+										Detail Queries</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab_5_1">
+									<div class="page-bar">
+										<div class="page-toolbar">
+											<div class="btn-group pull-right">
+												<button translate type="button" class="btn btn-fit-height red dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+													Actions <i class="fa fa-angle-down"></i>
+												</button>
+												<ul class="dropdown-menu pull-right" role="menu">
+													<li>
+														<a href="#/settings/detailquerydetails/{{id}}/0">
+															<i class="icon-user"></i> <translate>New Detail Query</translate> </a>
+													</li>
+													<ng-include src="'views/blocks/simpledetailtable-select-actions.html'" >
+													</ng-include>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+									<div class="table-container">
+										<div class="table-responsive">
+											<table st-table="rowCollection"  class="table table-striped">
+												<thead>
+												<tr>
+													<th translate>Code</th>
+													<th translate>Title</th>
+												</tr>
+												</thead>
+												<tbody>
+												<tr ng-repeat="row in rowCollection">
+
+													<td>
+														<ng-include src="'views/blocks/simpletable-select-checkbox-row.html'"></ng-include>
+														<a class="btn btn-xs" href="#/settings/detailquerydetails/{{row.detail_id}}/{{row.id}}?p[]=page::{{currentPage}}"> <u>{{row.code}}</u></a></td>
+													<td translate>{{row.title}}</td>
+												</tr>
+												</tbody>
+
+												<tfoot>
+												<tr>
+													<td colspan="5" class="text-center">
+														<div ng-include="'views/blocks/simpletable-pagination.html'"></div>
+													</td>
+												</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+				</div>
+			</div>
+			<!-- End: life time stats -->
+		</div>
+	</div>
+</section>
+<!-- END DETAILS-->
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams) {
+
+
+
+		//console.log($stateParams);
+		//console.log($stateParams.p[0]);
+
+
+		$scope.edit = function edit(){
+			$scope.editing = true;
+		}
+
+		$scope.changeCompany = function(){
+			$scope.edit();
+			$scope.bindDept();
+
+		}
+
+		$scope.bindDept = function(){
+			$http.get('../restapi/query/get?code=depts_select&param1='+$scope.detail._company_id_select.id).
+			success(function(data) {
+
+				$scope.deptSelect = [];
+				$scope.deptSelect.availableOptions = data.items;
+				$scope.detail._dept_id_select={id: $scope.detail.dept_id, name: ""};
+			});
+		}
+
+
+
+
+
+		$scope.bind = function bind(id){
+			$http.get('../restapi/detail?code=details&id='+id).
+			success(function(data) {
+				// here the data from the api is assigned to a variable named users
+
+				$scope.editing = false;
+				$scope.detail = {};
+				$scope.detail.id = id;
+				if (id!=0) {
+
+					$scope.detail = data.details[0];
+				}
+
+			});
+		}
+
+
+		$scope.save = function save(){
+			$scope.detail._table_name_ = "details";
+
+			//$scope.detail.company_id = $scope.detail._company_id_select.id;
+			//$scope.detail.dept_id = $scope.detail._dept_id_select.id;
+
+				$http.post('../restapi/update', {"items": [$scope.detail]}).
+					success(function (data) {
+
+						if (data.error!="0")
+						{
+							alert("Ошибка при сохранении");
+							return;
+						}
+						if ($scope.detail.id == 0) {
+							location.href = "#/settings/detaildetails/" + data.items[0].id;
+						}else{
+							$scope.bind($stateParams.id);
+						}
+					});
+			}
+
+		$scope.cancel = function cancel(){
+			$scope.bind($stateParams.id);
+		}
+
+		$scope.bind($stateParams.id);
+
+	};
+
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->

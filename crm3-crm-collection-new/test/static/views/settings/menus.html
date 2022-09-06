@@ -1,0 +1,78 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics"
+		 ng-init="init({currentPage:1,perPage:25,table_name:'menus'})"
+		 ng-controller="SimpleTableController">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Menus</translate>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<a  href="#/settings/menudetails/0" type="button" class="btn btn-fit-height blue" translate>
+				New Menu<i class="fa fa-angle-down"></i>
+			</a>
+			<button translate type="button" class="btn btn-fit-height red dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+			Actions <i class="fa fa-angle-down"></i>
+			</button>
+			<ul class="dropdown-menu pull-right" user="menu">
+				<ng-include src="'views/blocks/simpletable-select-actions.html'" >
+				</ng-include>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--SAMPLE NOTE:-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="table-responsive">
+						<table st-table="rowCollection"  class="table table-striped">
+							<thead>
+							<tr>
+								<th translate>Title</th>
+								<th translate>Url</th>
+								<th translate>Active</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in rowCollection">
+								<td>
+
+									<ng-include src="'views/blocks/simpletable-select-checkbox-row.html'"></ng-include>
+									<a class="btn btn-xs" href="#/settings/menudetails/{{row.id}}/?p[]=page::{{currentPage}}"> <u><i class="{{row.icon}}"></i> {{row.title}}</u></a></td>
+
+								<td>{{row.url}}</td>
+								<td ><i class="fa fa-check" ng-if="row.active==1"></i><i class="fa fa-circle-thin" ng-if="row.active==0"></i></td>
+							</tr>
+							</tbody>
+
+							<tfoot>
+							<tr>
+								<td colspan="5" class="text-center">
+									<div ng-include="'views/blocks/simpletable-pagination.html'"></div>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+<!-- END MAIN CONTENT -->

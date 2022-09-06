@@ -1,0 +1,27 @@
+version: '3.0'
+services:
+
+  crm:
+    container_name: crm
+    build:
+      context: crm
+      dockerfile: Dockerfile
+    volumes:
+      - ./crm/static:/opt/crm/static
+      - ./crm/uploads:/opt/crm/uploads
+      - ./crm/app://opt/crm/app
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 127.0.0.1:8282:5000
+    environment:
+      - OPENSHIFT_MYSQL_DB_USERNAME=damucrm
+      - OPENSHIFT_MYSQL_DB_PASSWORD=jkdfssd766776gxA!
+      - OPENSHIFT_MYSQL_DB_HOST=localhost
+      - OPENSHIFT_MYSQL_DB_PORT=3306
+      - OPENSHIFT_GO_IP=0.0.0.0
+      - OPENSHIFT_GO_PORT=5000
+      - OPENSHIFT_APP_NAME=damucrm
+    restart: always
+    logging:
+      options:
+        max-size: 1m

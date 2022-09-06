@@ -1,0 +1,364 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Deals</translate>
+
+		</li>
+
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button type="button" class="btn btn-fit-height grey-salt dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+			Actions <i class="fa fa-angle-down"></i>
+			</button>
+			<ul class="dropdown-menu pull-right" role="menu">
+				<li>
+					<a href="#">
+					<i class="icon-user"></i> <translate>New User</translate> </a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-present"></i> New Event <span class="badge badge-success">4</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-basket"></i> New order </a>
+				</li>
+				<li class="divider">
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-flag"></i> Pending Orders <span class="badge badge-danger">4</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+					<i class="icon-users"></i> Pending Users <span class="badge badge-warning">12</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE: The below datatable is not connected to a real database so the filter and sorting is just simulated for demo purposes only.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-shopping-cart"></i><translate>Deals</translate>
+				</div>
+				<div class="actions">
+					<a ng-click="open(0)" class="btn default yellow-stripe">
+					<i class="fa fa-plus"></i>
+					<span class="hidden-480"  translate>New deal</span>
+					</a>
+					<div class="btn-group">
+						<a class="btn default yellow-stripe" href="#" data-toggle="dropdown">
+						<i class="fa fa-share"></i>
+						<span class="hidden-480">
+						Tools </span>
+						<i class="fa fa-angle-down"></i>
+						</a>
+						<ul class="dropdown-menu pull-right">
+							<li>
+								<a href="#">
+								Export to Excel </a>
+							</li>
+							<li>
+								<a href="#">
+								Export to CSV </a>
+							</li>
+							<li>
+								<a href="#">
+								Export to XML </a>
+							</li>
+							<li class="divider">
+							</li>
+							<li>
+								<a href="#">
+								Print Invoices </a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="table-actions-wrapper">
+						<span>
+						</span>
+						<select class="table-group-action-input form-control input-inline input-small input-sm">
+							<option value="">Select...</option>
+							<option value="Cancel">Cancel</option>
+							<option value="Cancel">Hold</option>
+							<option value="Cancel">On Hold</option>
+							<option value="Close">Close</option>
+						</select>
+						<button class="btn btn-sm yellow table-group-action-submit" translate><i class="fa fa-check"></i> Submit</button>
+					</div>
+
+
+
+						<script type="text/ng-template" id="myModalContent.html">
+							<div class="modal-header">
+								<h3 class="modal-title"><translate>Deal</translate> {{ data.name }}</h3>
+							</div>
+							<div class="modal-body">
+								<ul>
+									<!--
+									<li ng-repeat="item in items">
+										<a ng-click="selected.item = item">{{ item }}</a>
+									</li>
+
+									-->
+
+
+									<div class="checkbox-list" ng-repeat="segment in segments">
+										<div class="checkbox">
+											<label>
+												<input class="checker" type="checkbox" ng-true-value="'checked'" ng-false-value="''"  ng-model="segment.checked" />
+												{{segment.title}}
+											</label>
+										</div>
+
+
+
+
+
+
+
+									</div>
+								</ul>
+								<!--Selected: <b>{{ selected.item }}</b>-->
+							</div>
+
+
+							<div class="portlet-body form">
+								<form role="form">
+									<div class="form-body">
+										<div class="form-group">
+											<label translate>Name</label>
+											<div class="input-group">
+											<span class="input-group-addon">
+											<i class="fa fa-envelope"></i>
+											</span>
+												<input type="text" ng-model= "data.title" class="form-control" placeholder="{{ 'Title' | translate }}" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label>Circle Input</label>
+											<div class="input-group">
+											<span class="input-group-addon input-circle-left">
+											<i class="fa fa-envelope"></i>
+											</span>
+												<input type="text"  ng-model= "data.amount"  class="form-control input-circle-right"  placeholder="{{ 'Amount' | translate }}">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="exampleInputPassword1" translate>Phone</label>
+											<div class="input-group">
+												<input type="phone"  ng-model= "data.phone"   class="form-control" id="exampleInputPassword1"  placeholder="{{ 'Phone' | translate }}" >
+											<span class="input-group-addon">
+											<i class="fa fa-user"></i>
+											</span>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="exampleInputAddress" translate>Address</label>
+											<div class="input-group">
+												<input type="phone" ng-model= "data.address" class="form-control" id="exampleInputAddress"  placeholder="{{ 'Address' | translate }}" >
+											<span class="input-group-addon">
+											<i class="fa fa-user"></i>
+											</span>
+											</div>
+										</div>
+										</div>
+
+									</form>
+								</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" ng-click="ok()" translate>Save</button>
+								<button class="btn btn-warning" ng-click="cancel()" translate>Cancel</button>
+							</div>
+
+
+						</script>
+
+						<!--<div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+
+					<div class="table-responsive">
+						<table st-table="rowCollection"  class="table table-striped">
+							<thead>
+							<tr>
+								<th translate>Name</th>
+								<th translate>Amount</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in rowCollection">
+								<td><a class="btn btn-xs default" ng-click="open(row.id)"><i class="fa fa-search"></i><span translate>View</span></a> {{row.title}}</td>
+								<td>{{row.amount}}</td>
+								<td>{{row.email}}</td>
+								<td>{{row.iin}}</td>
+							</tr>
+							</tbody>
+
+							<tfoot>
+							<tr>
+								<td colspan="5" class="text-center">
+									<div ng-include="'views/blocks/simpletable-pagination.html'"></div>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+
+
+
+
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log) {
+
+
+
+		$scope.bind = function bind(page,perpage){
+
+
+
+			$scope.currentPage = page;
+			$scope.perPage = perpage;
+
+			$http.get('../crm/deals_st/'+page+'/'+perpage).
+			success(function(data) {
+				// here the data from the api is assigned to a variable named users
+				$scope.rowCollection = data.items;
+				$scope.pageCount = data.pageCount;
+			});
+		}
+
+		$scope.bind(1,10);
+
+
+		$scope.callServer = function callServer(tableState) {
+			this.isLoading = true;
+			var pagination = tableState.pagination;
+			var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+			var number = pagination.number || 10;  // Number of entries showed per page.
+
+			PageService.getPage(start, number, tableState).then(function (result) {
+				ctrl.displayed = result.data;
+				tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
+				ctrl.isLoading = false;
+			});
+
+		}
+
+		$scope.items = ['item1', 'item2', 'item3'];
+		$scope.open = function (inItemID) {
+
+			$http.get('../crm/deals_st_detail/'+inItemID).
+			success(function(data) {
+				// here the data from the api is assigned to a variable named users
+				//$scope.rowCollection = data;
+				//console.log(data);
+
+				var modalInstance = $modal.open({
+					templateUrl: 'myModalContent.html',
+					controller: 'ModalInstanceCtrl',
+					resolve: {
+						data: function () {
+							return data.item;
+						},
+						segments: function () {
+							return data.segments;
+						},
+						items: function () {
+							return $scope.items;
+						},
+						itemID: function () {
+							return inItemID;
+						}
+					}
+				});
+
+				modalInstance.result.then(function (selectedItem) {
+					$scope.selected = selectedItem;
+				}, function () {
+					$log.info('Modal dismissed at: ' + new Date());
+				});
+
+			});
+
+
+
+		};
+		};
+
+
+
+
+	function ModalInstanceCtrl($scope, $http, $modalInstance, items,itemID,data,segments) {
+		$scope.items = items;
+		$scope.itemID = itemID;
+		$scope.data = data;
+		$scope.segments = segments;
+		//alert("Это не шутки "+$scope.itemID);
+		$scope.selected = {
+			item: $scope.items[0]
+		};
+
+		$scope.ok = function () {
+
+			$http({method: "post", data: $scope.data ,url: "../crm/deals_st_save"}).
+			then(function(response) {
+				//$scope.status = response.status;
+				//$scope.data = response.data;
+				$modalInstance.close($scope.selected.item);
+
+			}, function(response) {
+				alert("fail "+$scope.status);
+//				$scope.data = response.data || "Request failed";
+//				$scope.status = response.status;
+			});
+
+
+
+		};
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}
+
+
+
+
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->

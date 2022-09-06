@@ -1,0 +1,539 @@
+
+<div  		ng-app="app"
+			ng-controller="AppCtrl"
+			mouse-capture
+			ng-keydown="keyDown($event)"
+			ng-keyup="keyUp($event)"
+			class="container"
+>
+	<div>
+		<button class="btn btn-primary"
+				ng-click="addNewNode()"
+				title="Add a new dialog to the script"
+		>
+			Add Dialog
+		</button>
+		<!--<button class="btn btn-primary"
+				ng-click="addNewInputConnector()"
+				ng-disabled="chartViewModel.getSelectedNodes().length == 0"
+				title="Add a new input connector to the selected node"
+		>
+			Add Input Connector
+		</button>
+
+		<button class="btn btn-primary"
+				ng-click="rotate()"
+				ng-disabled="chartViewModel.getSelectedNodes().length == 0"
+				title="Rotate"
+		>
+			Rotate
+		</button>-->
+		<button class="btn btn-primary"
+				ng-click="addNewOutputConnector()"
+				ng-disabled="chartViewModel.getSelectedNodes().length == 0"
+				title="Add Dialog Option"
+		>
+			Add Dialog Option
+		</button>
+		<button class="btn btn-primary"
+				ng-click="deleteSelected()"
+				ng-disabled="chartViewModel.getSelectedNodes().length == 0 && chartViewModel.getSelectedConnections().length == 0"
+				title="Delete selected nodes and connections"
+		>
+			Delete Selected
+		</button>
+		<button class="btn btn-primary red"
+				ng-click="save()"
+				title="Save to database"
+		>
+			Save
+		</button>
+
+		<!--
+        This custom element defines the flowchart.
+        -->
+		<flow-chart
+				style="width: 5000px; height: 5000px"
+				chart="chartViewModel"
+		>
+		</flow-chart>
+	</div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="css/flowchart.css">
+
+<!-- Library code. -->
+
+<!-- Flowchart code. -->
+
+<script src="js/plugins/flowchart/svg_class.js" type="text/javascript"></script>
+<script src="js/plugins/flowchart/mouse_capture_service.js" type="text/javascript"></script>
+<script src="js/plugins/flowchart/dragging_service.js" type="text/javascript"></script>
+<script src="js/plugins/flowchart/flowchart_viewmodel.js" type="text/javascript"></script>
+<script src="js/plugins/flowchart/flowchart_directive.js" type="text/javascript"></script>
+
+
+<script
+type="text/javascript">
+
+function AppCtrl ($scope,DMLService,$stateParams,$http) {
+
+
+
+	$scope.bind = function () {
+
+		$scope.deletedNodes = [];
+		var connections = [];
+
+		$http.get('../restapi/detail?code=col_scripts&id='+$stateParams.id).
+		success(function(data) {
+
+
+			if (data.col_script_step_options) {
+				data.col_script_step_options.forEach(function (connItem, i) {
+					//console.log(connItem.from_step_id);
+					//console.log($scope.chartViewModel);
+
+
+
+					connections.push({
+						id: connItem.id*1,
+						source: {
+							nodeID: connItem.from_step_id*1,
+							connectorIndex: connItem.connector_index*1,
+						},
+
+						dest: {
+							nodeID: connItem.to_step_id*1,
+							connectorIndex: 0
+						},
+					});
+
+					console.log("vata");
+
+				});
+			}
+
+			if (data.col_script_steps){
+			data.col_script_steps.forEach(function(item, i) {
+
+				//alert(item.x);
+				//alert(item.y);
+
+				/*connections: [
+				 {
+				 source: {
+				 nodeID: 0,
+				 connectorIndex: 1,
+				 },
+
+				 dest: {
+				 nodeID: 1,
+				 connectorIndex: 0,
+				 },
+				 },
+
+
+				 ]*/
+
+
+				outputConnectors = [];
+
+				if (data.col_script_step_options) {
+					data.col_script_step_options.forEach(function (connItem, i) {
+						//console.log(connItem.from_step_id);
+						//console.log($scope.chartViewModel);
+
+						var found = false;
+						chartDataModel.connections.forEach(function (findConnItem, i) {
+							if (findConnItem.source.connectorIndex == connItem.connector_index)
+							{
+								found = true;
+							}
+						});
+
+						if (  (item.id == connItem.from_step_id)) {
+							outputConnectors.push({index: 1, name: connItem.title, id: connItem.id});
+							//console.log("vata");
+
+						}
+
+//						chartDataModel.connections.push({
+//							id: connItem.id*1,
+//							source: {
+//								nodeID: connItem.from_step_id*1,
+//								connectorIndex: connItem.connector_index*1,
+//							},
+//
+//							dest: {
+//								nodeID: connItem.to_step_id*1,
+//								connectorIndex: 0
+//							},
+//						});
+
+						console.log("vata");
+
+					});
+				}
+
+
+
+
+				chartDataModel.nodes.push
+				(
+
+						{
+							name: item.title,
+							id: item.id,
+							x: item.x*1,
+							y: item.y*1,
+
+							inputConnectors: [
+								{
+									name: "Input",
+								}
+							],
+						 outputConnectors: outputConnectors,
+
+						}
+				);
+				chartDataModel.connections =connections;
+
+			});
+			};
+
+
+			$scope.chartViewModel = new flowchart.ChartViewModel(chartDataModel);
+			//console.log(data.);
+
+
+
+
+		})
+
+
+	}
+
+	$scope.save = function (){
+
+
+
+		//Prepare Data to Save to DataBase
+		var dataToInsert = [];
+		var dataToUpdate = [];
+
+		$scope.chartViewModel.nodes.forEach(function(item, i) {
+
+
+
+
+			if (item.data.id==0) {
+				dataToInsert.push({script_id: $stateParams.id, x: item.data.x, y: item.data.y, title: item.data.name});
+			}else{
+				dataToUpdate.push({script_id: $stateParams.id, id:item.data.id, x: item.data.x, y: item.data.y, title: item.data.name});
+			}
+		});
+
+		var dataToInsertOptions = [];
+		var dataToUpdateOptions = [];
+
+
+		$scope.chartViewModel.connections.forEach(function(item, i) {
+			var name = "";
+			//console.log(item.data.source.nodeID);
+			//console.log(item.data);
+			//console.log(item.data.dest.nodeID);
+			//console.log(item);
+
+			$scope.chartViewModel.nodes.forEach(function(nodeItemFindName, i) {
+				//console.log("length="+(nodeItemFindName.outputConnectors.length));
+				//console.log(nodeItemFindName.outputConnectors);
+				nodeItemFindName.outputConnectors.forEach(function(nodeItemFindOutName, ii) {
+					console.log( item.data);
+					console.log( nodeItemFindOutName.data.name);
+					if (ii==item.data.source.connectorIndex){
+						name = nodeItemFindOutName.data.name
+						//alert(name);
+					}
+				});
+
+
+			});
+
+			if (!item.data.id) {
+				dataToInsertOptions.push({
+					connector_index: item.data.source.connectorIndex,
+					title: name,
+					from_step_id: item.data.source.nodeID,
+					to_step_id: item.data.dest.nodeID
+				});
+			}
+			else {
+				dataToUpdateOptions.push({
+					connector_index: item.data.source.connectorIndex,
+					id: item.data.id,
+					title: item.data.name,
+					from_step_id: item.data.source.nodeID,
+					to_step_id: item.data.dest.nodeID
+				});
+			}
+		});
+
+
+
+		DMLService.update(
+				[
+					{table_name:"col_script_steps",action:"insert",values:dataToInsert},
+					{table_name:"col_script_steps",action:"update",values:dataToUpdate},
+					{table_name:"col_script_steps",action:"delete",values:$scope.deletedNodes},
+					{table_name:"col_script_step_options",action:"insert",values:dataToInsertOptions},
+					{table_name:"col_script_step_options",action:"update",values:dataToUpdateOptions},
+				])
+				.success (function (data){
+					//alert("Saved!");
+					//$scope.bind();
+					console.log("saved");
+
+				});
+
+
+
+		//($scope.chartViewModel);
+		//alert("Saved!");
+
+	}
+
+		//
+		// Code for the delete key.
+		//
+		var deleteKeyCode = 46;
+
+		//
+		// Code for control key.
+		//
+		var ctrlKeyCode = 65;
+
+		//
+		// Set to true when the ctrl key is down.
+		//
+		var ctrlDown = false;
+
+		//
+		// Code for A key.
+		//
+		var aKeyCode = 17;
+
+		//
+		// Code for esc key.
+		//
+		var escKeyCode = 27;
+
+		//
+		// Selects the next node id.
+		//
+		var nextNodeID = 10;
+
+		//
+		// Setup the data-model for the chart.
+		//
+		var chartDataModel = {
+
+			connections :[],
+			nodes: [
+
+
+			/*	{
+					name: "Example Node 2",
+					id: 1,
+					x: 400,
+					y: 200,
+					inputConnectors: [
+						{
+							name: "Input",
+						},
+					],
+					outputConnectors: [
+						{
+							name: "A",
+						},
+						{
+							name: "B",
+						},
+						{
+							name: "C",
+						},
+					],
+				},
+*/
+			],
+
+			/*connections: [
+				{
+					source: {
+						nodeID: 0,
+						connectorIndex: 1,
+					},
+
+					dest: {
+						nodeID: 1,
+						connectorIndex: 0,
+					},
+				},
+
+
+			]*/
+		};
+
+		//
+		// Event handler for key-down on the flowchart.
+		//
+		$scope.keyDown = function (evt) {
+
+			if (evt.keyCode === ctrlKeyCode) {
+
+				ctrlDown = true;
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+		};
+
+		//
+		// Event handler for key-up on the flowchart.
+		//
+		$scope.keyUp = function (evt) {
+
+			if (evt.keyCode === deleteKeyCode) {
+				//
+				// Delete key.
+				//
+				//$scope.chartViewModel.deleteSelected();
+				$scope.chartViewModel.deleteSelected();
+
+
+				//$scope.deletedNodes
+
+			}
+
+			if (evt.keyCode == aKeyCode && ctrlDown) {
+				//
+				// Ctrl + A
+				//
+				$scope.chartViewModel.selectAll();
+			}
+
+			if (evt.keyCode == escKeyCode) {
+				// Escape.
+				$scope.chartViewModel.deselectAll();
+			}
+
+			if (evt.keyCode === ctrlKeyCode) {
+				ctrlDown = false;
+
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+		};
+
+		//
+		// Add a new node to the chart.
+		//
+		$scope.addNewNode = function () {
+
+			var nodeName = prompt("Enter a node name:", "New node");
+			if (!nodeName) {
+				return;
+			}
+
+			//
+			// Template for a new node.
+			//
+			var newNodeDataModel = {
+				name: nodeName,
+				id: 0,
+				x: 0,
+				y: 0,
+				rotate: true,
+				inputConnectors: [
+					{
+						name: "Input"
+					}
+				],
+			};
+
+			$scope.chartViewModel.addNode(newNodeDataModel);
+		};
+
+		//
+		// Add an input connector to selected nodes.
+		//
+		$scope.addNewInputConnector = function () {
+			var connectorName = prompt("Enter a connector name:", "New connector");
+			if (!connectorName) {
+				return;
+			}
+
+			var selectedNodes = $scope.chartViewModel.getSelectedNodes();
+			for (var i = 0; i < selectedNodes.length; ++i) {
+				var node = selectedNodes[i];
+				node.addInputConnector({
+					name: connectorName,
+					id: 0,
+				});
+			}
+		};
+
+		//
+		// Add an output connector to selected nodes.
+		//
+		$scope.addNewOutputConnector = function () {
+		var connectorName = prompt("Enter a connector name:", "New connector");
+		if (!connectorName) {
+			return;
+		}
+
+		var selectedNodes = $scope.chartViewModel.getSelectedNodes();
+		for (var i = 0; i < selectedNodes.length; ++i) {
+			var node = selectedNodes[i];
+			node.addOutputConnector({
+				name: connectorName,
+				id: 0,
+			});
+		}
+	};
+
+	$scope.rotate = function () {
+
+
+		var selectedNodes = $scope.chartViewModel.getSelectedNodes();
+		for (var i = 0; i < selectedNodes.length; ++i) {
+			var node = selectedNodes[i];
+			node.rotate = true;
+			alert();
+		}
+	};
+
+		//
+		// Delete selected nodes and connections.
+		//
+		$scope.deleteSelected = function () {
+			var selectedNodes = $scope.chartViewModel.getSelectedNodes();
+			for (var i = 0; i < selectedNodes.length; ++i) {
+				var node = selectedNodes[i];
+				$scope.deletedNodes.push({id:node.data.id});
+			}
+
+			$scope.chartViewModel.deleteSelected();
+
+		};
+
+		//
+		// Create the view-model for the chart and attach to the scope.
+		//
+
+	$scope.bind();
+
+
+	}
+	;
+
+</script>

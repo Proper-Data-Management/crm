@@ -1,0 +1,72 @@
+<div class="row" ng-controller="WidgetCustom01Ctrl">
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 center-block" >
+        <div class="portlet light">
+            <div class="portlet-body center-block">
+
+                <button ng-click="takeone()" class="btn btn-primary center-block" translate>Take work</button>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12" ng-repeat="item in widget_custom_01.items">
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-bar-chart font-green-haze hide"></i>
+                    <span class="caption-subject font-green-haze bold uppercase" translate>{{item.title_widget}}</span>
+                    <span class="caption-helper hide" translate>weekly stats...</span>
+                </div>
+            </div>
+
+            <div class="portlet-body">
+                <div class="row list-separated">
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="font-grey-mint font-sm" translate>Amount</div>
+                        <div class="uppercase font-hg font-red-flamingo">
+                            {{item.amount}} <span class="font-lg font-grey-mint" translate>tenge</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="font-grey-mint font-sm" translate>
+                            Count
+                        </div>
+                        <div class="uppercase font-hg font-blue-sharp">
+                            {{item.cnt}} <span class="font-lg font-grey-mint"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    function WidgetCustom01Ctrl($scope,$http){
+
+    $scope.takeone = function takeone(){
+        $http.get("../restapi/deals/takeone").
+                success(function (data) {
+                     location.href= "#/crm/dealdetails/"+data.id;
+                });
+
+    }
+    $scope.runWidget = function runWidget(config){
+            $http.get(config.url+"&code="+config.name).
+                    success(function (data) {
+                        $scope[config.name] = data
+                    });
+        }
+
+    $scope.runWidget({name:'widget_custom_01',url:'../restapi/widget/get?bla=bla'});
+
+    }
+</script>
+

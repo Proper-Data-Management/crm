@@ -1,0 +1,56 @@
+variables:
+  ECR_REPO_NAMESPACE: onetech-frontend
+  ECR_URL: 227185325630.dkr.ecr.eu-west-1.amazonaws.com
+  AWS_DEFAULT_REGION: eu-west-1
+  GIT_DEPTH: 0
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE =~ /^trigger|pipeline|web$/'
+    - if: $UPSTREAM_REGISTRY_IMAGE
+    - if: $APP_NAME && $APP_CONF == 'dev' || $APP_CONF == 'devgo' || $APP_CONF == 'qa' || $APP_CONF == 'qa1' || $APP_CONF == 'qa2' || $APP_CONF == 'staging' || $APP_CONF == 'production'
+    - if: $VERSION
+
+default:
+  image: ${ECR_URL}/onetech-devops/smuggler:latest
+  tags:
+    - autoscaling-runner
+
+.deploy:
+  stage: deploy
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan git.dar.kz >> ~/.ssh/known_hosts  
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo $APP_NAME $APP_CONF $VERSION
+    - git config --global user.email "${GITLAB_USER_EMAIL}"
+    - git config --global user.name "${GITLAB_USER_NAME}"
+    - cd ${CI_PROJECT_DIR}/${APP_NAME}/${APP_CONF}
+    - git fetch --prune
+    - git fetch --all
+    - git pull git@git.dar.kz:crediton-3/crm3-crm-collection-config.git HEAD:master
+    - kustomize edit set image ${IMAGE_TAG}
+    - git add .
+    - git commit -m "[Auto-release] Update $APP_NAME image tag to $VERSION"
+    - git push git@git.dar.kz:crediton-3/crm3-crm-collection-config.git HEAD:master
+
+deploy:aws:
+  extends: .deploy
+  variables:
+    IMAGE_TAG: ${ECR_URL}/${ECR_REPO_NAMESPACE}/${APP_NAME}:${VERSION}
+  rules:
+    - if: $APP_CONF == 'dev' || $APP_CONF == 'devgo' || $APP_CONF == 'qa' || $APP_CONF == 'qa1' || $APP_CONF == 'qa2'
+      when: always
+
+deploy:gitlab:
+  extends: .deploy
+  variables:
+    IMAGE_TAG: ${UPSTREAM_REGISTRY_IMAGE}/${APP_NAME}:${VERSION}
+  rules:
+    - if: $APP_CONF == 'staging' || $APP_CONF == 'production'
+      when: always

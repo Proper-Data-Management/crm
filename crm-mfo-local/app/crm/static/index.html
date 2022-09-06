@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js" data-ng-app="MetronicApp"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js" data-ng-app="MetronicApp"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="ru" data-ng-app="MetronicApp" manifest="/restapi/services/run/manifest.appcache?v=6">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+
+    <head>
+        <title crminnertext="$state.current.data.pageTitle|translate">CRM</title>
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+
+        <!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+        <link href="js/plugins/angular-tree-control/css/tree-control.css" rel="stylesheet" type="text/css" />
+        <link href="js/plugins/angular-tree-control/css/tree-control-attribute.css" rel="stylesheet" type="text/css" />
+        <link href="js/plugins/ui-select/select.min.css" rel="stylesheet" type="text/css" />
+        <link href="js/plugins/angular-ui-tree/angular-ui-tree.min.css" rel="stylesheet" type="text/css" />
+        <link href="js/plugins/angular-bootstrap-colorpicker/css/colorpicker.min.css" rel="stylesheet" type="text/css" />
+
+        <!--<link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />-->
+        <link href="theme/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/css/components.css" id="style_components" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/global/css/plugins.css" rel="stylesheet" type="text/css" />
+        <link href="theme/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css" />
+        <link href="css/custom.css" rel="stylesheet" type="text/css" />
+
+        <link rel="shortcut icon" href="{{session_parameters.shortcut_icon_url}}" />
+
+
+        <link id="ng_load_plugins_before" />
+    </head>
+    <!-- END HEAD -->
+
+    <!-- BEGIN BODY -->
+    <!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+    <!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+    <!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+    <!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+    <!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+    <!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+    <!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+    <!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+    <!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+
+    <body ng-controller="AppController" class="page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-on-load" ng-class="{'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+
+        <!-- END FOOTER -->
+
+        <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+
+        <!-- BEGIN CORE JQUERY PLUGINS -->
+        <!--[if lt IE 9]>
+        <script src="theme/assets/global/plugins/respond.min.js"></script>
+        <script src="theme/assets/global/plugins/excanvas.min.js"></script>
+        <![endif]-->
+        <script src="js/plugins/ace/ace.js" type="text/javascript"></script>
+        <script src="js/all.js"></script>
+
+
+        <container data-ng-include="'/restapi/widget/index_default'">
+        </container>
+
+
+        <script type="text/javascript">
+            /* Init Metronic's core jquery plugins and layout scripts */
+            jQuery(document).ready(function() {
+                Metronic.init(); // Run metronic theme
+                Metronic.setAssetsPath('theme/assets/'); // Set the assets folder path
+                Index.init();
+                Index.initCharts(); // init index page's custom scripts
+
+
+            });
+        </script>
+
+
+        <!-- END JAVASCRIPTS -->
+    </body>
+    <!-- END BODY -->
+
+</html>

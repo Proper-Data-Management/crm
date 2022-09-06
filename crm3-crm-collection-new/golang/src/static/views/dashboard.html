@@ -1,0 +1,101 @@
+<!-- BEGIN PAGE HEADER-->
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<a href="#/dashboard.html">Home</a>
+			<i class="fa fa-angle-right"></i>
+		</li>
+		<li>
+			<a href="#" translate>Dashboard</a>
+		</li>
+	</ul>
+</div>
+<!--<h3 class="page-title" translate>-->
+	<!--Dashboard-->
+<!--</h3>-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div ng-controller="DashboardController">
+
+
+	<div  class="row" ng-repeat="row in dashboard_rows">
+		<div  ng-repeat="col in dashboard_cols">
+			<div  ng-if="(row.id==col.row_id)">
+				<ng-include src="col.templateurl" >
+				</ng-include>
+			</div>
+
+
+
+		</div>
+	</div>
+	<!--<ng-include src="'views/crm/widgets/db_header.html'" >
+	</ng-include>-->
+
+	<!-- BEGIN DASHBOARD STATS -->
+
+	<!--<ng-include src="'views/crm/widgets/db_col_5.html'" >-->
+	<!--</ng-include>-->
+
+	<!--<ng-include src="'views/crm/widgets/db_col_4.html'" >-->
+	<!--</ng-include>-->
+
+	<!--<ng-include src="'views/crm/widgets/db_col_3.html'" >-->
+	<!--</ng-include>-->
+	<!--
+
+	<ng-include src="'views/crm/widgets/db_widget_custom_01.html'" >
+	</ng-include>
+
+	<ng-include src="'views/crm/widgets/db_widget_custom_02.html'" >
+	</ng-include>
+
+	<ng-include src="'views/crm/widgets/db_widget_custom_03.html'" >
+	</ng-include>
+	-->
+
+	<!--
+
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<ng-include src="'views/crm/widgets/db_sales_summary.html'" >
+			</ng-include>
+		</div>
+		<div class="col-md-6 col-sm-12">
+			<ng-include src="'views/crm/widgets/db_member_activity.html'" >
+			</ng-include>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 col-sm-12">
+			<ng-include src="'views/crm/widgets/db_tasks.html'" >
+			</ng-include>
+		</div>
+		<div class="col-md-6 col-sm-12">
+			<ng-include src="'views/crm/widgets/db_feeds.html'" >
+			</ng-include>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-sm-6">
+			<ng-include src="'views/crm/widgets/db_recent_activities.html'" >
+			</ng-include>
+		</div>
+		<div class="col-md-6 col-sm-6">
+			<ng-include src="'views/crm/widgets/db_customer_support.html'" >
+			</ng-include>
+		</div>
+	</div>-->
+</div>
+<!-- END MAIN CONTENT -->
+<!-- BEGIN MAIN JS & CSS -->
+<script>
+	//Index.init();
+	Tasks.initDashboardWidget();
+
+
+
+</script>
+<!-- BEGIN MAIN JS & CSS -->

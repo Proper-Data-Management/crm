@@ -1,0 +1,92 @@
+<!--<label translate="">Period:</label> <input type="date" ng-model="filter.filterDate1" class="btn btn-fit-height" />
+<input type="date" ng-model="filter.filterDate2" class="btn btn-fit-height" />
+-->
+
+<div class="container-fluid form-horizontal" >
+    <div class="form-group" >
+        <div ng-repeat = "fs in filterSet">
+            <div ng-if="fs.data_type=='timestamp'">
+                <label class="control-label col-md-2" translate>{{fs.title}} от:</label>
+                <div class="col-md-2">
+                    <input type="date" ng-model="fs.value.from_date_mdl" />
+                </div>
+                <div class="col-md-2">
+                    <input type="date" ng-model="fs.value.to_date_mdl"  />
+                </div>
+            </div>
+
+            <div ng-if="fs.data_type=='varchar'">
+                <label class="control-label col-md-2"><translate>{{fs.title}}</translate> :</label></label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" ng-model="fs.value.text"  />
+                </div>
+            </div>
+
+            <div ng-if="fs.data_type=='text'">
+                <label class="control-label col-md-2" translate><translate>{{fs.title}}</translate> содержит:</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" ng-model="fs.value.text"  />
+                </div>
+            </div>
+
+            <div ng-if="fs.data_type=='double'">
+                <label class="control-label col-md-2" translate>{{fs.title}} от:</label>
+                <div class="col-md-2">
+                    <input type="number" class="form-control" ng-model="fs.value.from_number_mdl"  />
+                </div>
+
+                <div class="col-md-2">
+                    <input type="number" class="form-control" ng-model="fs.value.to_number_mdl"  />
+                </div>
+            </div>
+
+            <div  ng-if="fs.data_type=='reference'">
+                <label class="control-label col-md-2" translate>{{fs.title}}:</label>
+                <div class="col-md-4">
+                    <ui-select  class="form-control" title="{{item.title | translate}}" multiple tagging="tagTransform" ng-model="fs.value.selected_references_mdl" theme="bootstrap" ng-disabled="disabled"  >
+                        <ui-select-match  placeholder="{{fs.title | translate}}">{{$item.title_short}}</ui-select-match>
+                        <ui-select-choices repeat="item in fs.lookup | propsFilter: {title: $select.search, id: $select.search}">
+                            <div ng-if="item.isTag" ng-bind-html="item.title| highlight: $select.search"></div>
+                            <div title="{{item.title}}" ng-if="!item.isTag" ng-bind-html="item.title + item.isTag| highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <!--<p>Selected: {{fs.value.selected_references_mdl}}</p>-->
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <button type="button"  ng-click="bindWithFilter(true)"
+                    class="btn btn-primary btn-fit-height dropdown-toggle" >
+                <i class="fa fa-search"></i>
+                <translate>Search</translate>
+            </button>
+            <button type="button"  ng-click="resetFilter()"
+                    class="btn btn-primary btn-fit-height dropdown-toggle green" >
+                <i class="fa fa-file-o"></i>
+                <translate>Reset filter</translate>
+            </button>
+
+            <button type="button"  ng-click="exportXML()" ng-if="exportXMLFields" class="btn btn-fit-height dropdown-toggle" translate>
+                <translate>Export XML</translate><i class="fa fa-angle-down"></i>
+            </button>
+            <a ng-href ="{{exportXMLData}}" download="{{table_name}}" class="btn btn-fit-height dropdown-toggle" translate ng-if="exportXMLData" >
+                <translate>Download XML</translate><i class="fa fa-angle-down"></i>
+            </a>
+
+            <button type="button"  ng-click="pubSubPublish('chooseBPMSModal',{'processCode':'processData', 'init': [{'name':'url','value':'?code='+table_name+'&'+searchURL}] })" class="btn btn-fit-height dropdown-toggle" translate>
+                <translate>Actions</translate><i class="fa fa-angle-down"></i>
+            </button>
+
+
+            <label>Всего записей: {{allCount}}</label>
+            <label>Отображено записей: {{rowCollection.length}}</label>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,441 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<a href="#/crm/deals" translate>Deals</a>
+			<i class="fa fa-angle-right"></i>
+			<translate>{{detail.name}}</translate>
+
+		</li>
+
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button class="btn btn-primary" ng-repeat="op in deal_opers" ng-click="modal(op)" translate>{{op.title}}</button>
+			<button ng-if="editing" class="btn btn-primary" ng-click="save()" translate>Save</button>
+
+			<button ng-if="editing" class="btn btn-warning" ng-click="cancel()" translate>Cancel</button>
+			<button ng-if="!editing" class="btn btn-warning" translate>Saved</button>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE SAMPLE:.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="portlet-body form">
+						<form role="form">
+							<div class="form-body">
+								<div class="form-group col-md-6">
+									<label translate>Name</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input type="text" ng-change="edit()" ng-model= "detail.title" class="form-control" placeholder="{{ 'Title' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group col-md-6" >
+									<label for="xdealStageSelect" translate>Deal Stage</label>
+									<select ng-change="edit()" class="form-control" name="mySelect" id="xdealStageSelect"
+											ng-options="option.name for option in xdealStageSelect.availableOptions track by option.id"
+											ng-model="detail._deal_stage"></select>
+								</div>
+								<div class="form-group col-md-6" >
+									<label for="xcitySelect" translate>City</label>
+									<select ng-change="edit()" class="form-control" name="mySelect" id="xcitySelect"
+											ng-options="option.name for option in xcitySelect.availableOptions track by option.id"
+											ng-model="detail._x_city"></select>
+								</div>
+								<div class="form-group col-md-6" >
+									<label for="xregionSelect" translate>Region</label>
+									<select ng-change="edit()" class="form-control" name="mySelect" id="xregionSelect"
+											ng-options="option.name for option in xregionSelect.availableOptions track by option.id"
+											ng-model="detail._x_region"></select>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="InputAmount" translate>Amount</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-dollar"></i>
+										</span>
+										<input  ng-change="edit()"  ng-model= "detail.amount" class="form-control" id="InputAmount"  placeholder="{{ 'Amount' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group col-md-6" >
+									<label for="xobjectTypeSelect" translate>Object Type</label>
+									<select ng-change="edit()" class="form-control" name="mySelect" id="xobjectTypeSelect"
+											ng-options="option.name for option in xobjectTypeSelect.availableOptions track by option.id"
+											ng-model="detail._x_object_type"></select>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="InputObjectPrice" translate>Object Price</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-dollar"></i>
+										</span>
+										<input  ng-change="edit()"  ng-model= "detail.x_object_price" class="form-control" id="InputObjectPrice"  placeholder="{{ 'Object Price' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="InputObjectSquare" translate>Object Square</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-list"></i>
+										</span>
+										<input  ng-change="edit()"  ng-model= "detail.x_object_square" class="form-control" id="InputObjectSquare"  placeholder="{{ 'Object Square' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="Owner" translate>Owner</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input readonly ng-model= "detail.owner" class="form-control" id="Owner"  placeholder="{{ 'Owner' | translate }}" >
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<ng-include
+			src="tpl.widgetFastEditAccount"  />
+	</div>
+	<div class="col-md-6">
+		<div ng-include="tpl.widgetDealOpJrn" />
+	</div>
+</div>
+
+
+
+
+</section>
+
+
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams,dealService) {
+
+
+
+
+		$scope.tpl = {};
+		$scope.edit = function edit(){
+			$scope.editing = true;
+		}
+
+		$scope.bindCity = function(){
+			$http.get("../restapi/query/get?code=cities").
+			success(function(data) {
+
+				//alert($scope.detail.x_city);
+				$scope.xcitySelect = [];
+				$scope.xcitySelect.availableOptions = data.items;
+				$scope.detail._x_city={id: $scope.detail.x_city, name: ""};
+
+			});
+		}
+
+
+		$scope.bindRegion = function(){
+			$http.get("../restapi/query/get?code=regions").
+			success(function(data) {
+				$scope.xregionSelect = [];
+				$scope.xregionSelect.availableOptions = data.items;
+				$scope.detail._x_region={id: $scope.detail.x_region, name: ""};
+
+			});
+		}
+
+		$scope.bindObjectType = function(){
+			$http.get("../restapi/query/get?code=object_types").
+			success(function(data) {
+				$scope.xobjectTypeSelect = [];
+				$scope.xobjectTypeSelect.availableOptions = data.items;
+				$scope.detail._x_object_type={id: $scope.detail.x_object_type, name: ""};
+
+			});
+		}
+
+		$scope.bindDealStage = function(){
+			$http.get("../restapi/query/get?code=deal_stages_select").
+			success(function(data) {
+				$scope.xdealStageSelect = [];
+				$scope.xdealStageSelect.availableOptions = data.items;
+				$scope.detail._deal_stage={id: $scope.detail.deal_stage_id, name: ""};
+
+			});
+		}
+
+		$scope.bind = function bind(dealId){
+			$http.get('/restapi/detail?code=deals&id='+dealId).
+			success(function(data) {
+				console.log(data);
+				$scope.detail = data.deals[0];
+				$scope.deal_opers = data.deal_opers;
+
+				dealService.setAccountId($scope.detail.account_id);
+				dealService.setId($scope.detail.id);
+
+				$scope.tpl.widgetFastEditAccount = 'views/crm/widgets/widget_fast_edit_account.html';
+				$scope.tpl.widgetDealOpJrn = 'views/crm/widgets/deal_opjrn.html';
+				$scope.editing = false;
+				$scope.bindCity();
+				$scope.bindRegion();
+				$scope.bindObjectType();
+				$scope.bindDealStage();
+
+
+
+
+			});
+		}
+
+		$scope.deleteContact = function deleteContact(cont){
+			cont.deleted = true;
+			$scope.editing = true;
+		}
+
+		$scope.addContact = function addContact(contact){
+			$scope.detail.contacts.push(contact);
+			$scope.editing = true;
+		}
+
+		$scope.save = function save(){
+
+			$scope.detail.x_city= $scope.detail._x_city.id;
+			$scope.detail.x_region= $scope.detail._x_region.id;
+			$scope.detail.x_object_type= $scope.detail._x_object_type.id;
+			$scope.detail.deal_stage_id= $scope.detail._deal_stage.id;
+			$scope.detail._table_name_ = "deals";
+
+			if ($scope.detail.id == 0) {
+				$http.post('../restapi/update', {"items": [$scope.detail]}).
+						success(function (data) {
+							// here the data from the api is assigned to a variable named users
+							console.log(data);
+							location.href= "#/crm/dealdetails/"+data.items[0].id;
+						});
+			}
+			else{
+				$scope.detail.amount=$scope.detail.amount*1;
+				$http.post('../restapi/update', {"items": [$scope.detail]}).
+						success(function (data) {
+
+							// here the data from the api is assigned to a variable named users
+							$scope.bind($stateParams.id);
+						});
+			}
+		}
+
+		$scope.cancel = function cancel(){
+			window.history.back();
+		}
+
+
+		$scope.rundealoper = function (op){
+			$http.post('../restapi/deals/runop', {deal_id: $scope.detail.id,op: op}).
+					success(function (data) {
+						// here the data from the api is assigned to a variable named users
+						location.href= "#/dashboard.html";
+						//$scope.bind($scope.detail.id);
+
+					});
+		}
+
+
+
+		$scope.modal = function(op){
+
+			//x = new Date();
+			//x.setHours(x.getHours() - x.getTimezoneOffset() / 60);
+
+
+			var modalInstance = $modal.open({
+				templateUrl: 'views/crm/modals/modal_deal_stage_oper.html',
+				controller: 'ModalInstanceCtrl',
+				resolve: {
+					op: function () {
+						op.id = op.id*1;
+						return op;
+					},
+					detail: function () {
+						return $scope.detail;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (selectedItem) {
+				$scope.selected = selectedItem;
+			}, function () {
+				$log.info('Modal dismissed at: ' + new Date());
+			});
+
+		}
+		$scope.bind($stateParams.id);
+
+	};
+
+
+</script>
+
+
+<script type="text/javascript">
+	function DealOpJrnWidget($scope,$http,$stateParams){
+		$scope.test = "vata emes";
+		$http.get('../restapi/widget/get?code=deal_op_jrn&deal_id='+$stateParams.id).
+				success(function (data) {
+					// here the data from the api is assigned to a variable named users
+					$scope.data = data
+					console.log($stateParams);
+				});
+	}
+
+	function BindDateTimePicker(ctrl) {
+		ctrl.mytime = new Date();
+
+		ctrl.hstep = 1;
+		ctrl.mstep = 15;
+
+		ctrl.options = {
+			hstep: [1, 2, 3],
+			mstep: [1, 5, 10, 15, 25, 30]
+		};
+
+		ctrl.ismeridian = false;
+//        $scope.toggleMode = function() {
+//            $scope.ismeridian = ! $scope.ismeridian;
+//        };
+
+		ctrl.update = function() {
+			var d = new Date();
+			d.setHours( 14 );
+			d.setMinutes( 0 );
+			ctrl.mytime = d;
+		};
+
+		ctrl.changed = function () {
+			console.log('Time changed to: ' + ctrl.mytime);
+		};
+
+		ctrl.clear = function() {
+			ctrl.mytime = null;
+		};
+
+		ctrl.clear();
+	}
+
+	function BindDatepickerDemoCtrl(ctrl) {
+		ctrl.today = function() {
+			ctrl.dt = "30.12.2015";
+		};
+		ctrl.today();
+
+		ctrl.clear = function () {
+			ctrl.dt = null;
+		};
+
+// Disable weekend selection
+		ctrl.disabled = function(date, mode) {
+			return false;
+			return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+		};
+
+		ctrl.toggleMin = function() {
+			ctrl.minDate = ctrl.minDate ? null : new Date();
+		};
+		ctrl.toggleMin();
+
+		ctrl.open = function($event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+
+			ctrl.opened = true;
+		};
+
+		ctrl.dateOptions = {
+			formatYear: 'yy',
+			startingDay: 1
+		};
+
+		ctrl.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+		ctrl.format = ctrl.formats[2];
+	}
+
+
+	function ModalInstanceCtrl($scope, $http, $modalInstance, detail,op) {
+
+		$scope.detail = detail;
+
+
+		$scope.op = op;
+		$scope.ok = function () {
+
+			$http({method: "post", data: $scope.data ,url: "../dev/menus_st_save"}).
+					then(function(response) {
+						//$scope.status = response.status;
+						//$scope.data = response.data;
+						$modalInstance.close($scope.selected.item);
+
+					}, function(response) {
+						alert("fail "+$scope.status);
+//				$scope.data = response.data || "Request failed";
+//				$scope.status = response.status;
+					});
+
+
+
+		};
+
+		$scope.timeDeparture = [];
+		BindDateTimePicker($scope.timeDeparture);
+		$scope.dateDeparture= [];
+		BindDatepickerDemoCtrl($scope.dateDeparture);
+
+		$scope.timeProlong = [];
+		BindDateTimePicker($scope.timeProlong);
+		$scope.dateProlong = [];
+		BindDatepickerDemoCtrl($scope.dateProlong);
+
+		$scope.run = function (){
+			$http.post('../restapi/deals/runop', {deal_id: $scope.detail.id*1,op: $scope.op}).
+					success(function (data) {
+						// here the data from the api is assigned to a variable named users
+						$modalInstance.dismiss('cancel');
+						location.href= "#/dashboard.html";
+						//$scope.bind($scope.detail.id);
+
+					});
+		}
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};
+	}
+
+</script>
+
+<!-- END MAIN CONTENT -->
+

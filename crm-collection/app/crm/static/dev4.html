@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js" data-ng-app="MetronicApp"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js" data-ng-app="MetronicApp"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" data-ng-app="MetronicApp">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<title>{{($state.current.data.pageTitle|translate)}}</title>
+
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+	<link rel="stylesheet"  href="js/plugins/angular-tree-control/css/tree-control.css" type="text/css" />
+	<link rel="stylesheet"  href="js/plugins/angular-tree-control/css/tree-control-attribute.css" type="text/css" />
+	<link href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+<link href="theme/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="theme/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+<link href="theme/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/bootstrap4/bootstrap-reboot.min.css" rel="stylesheet" type="text/css"/>
+<link href="css/bootstrap4/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+<link href="theme/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+<link href="theme/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
+
+<!-- PLUGINS CSS -->
+<link href="js/plugins/ui-select/select.min.css" rel="stylesheet" type="text/css"/>
+<link href="js/plugins/angular-ui-tree/angular-ui-tree.min.css" rel="stylesheet" type="text/css"/>
+<link href="js/plugins/angular-bootstrap-colorpicker/css/colorpicker.min.css" rel="stylesheet" type="text/css"/>
+<!-- PLUGINS CSS -->
+
+<!-- END GLOBAL MANDATORY STYLES -->
+
+<!-- BEGIN DYMANICLY LOADED CSS FILES(all plugin and page related styles must be loaded between GLOBAL and THEME css files ) -->
+<link id="ng_load_plugins_before"/>
+<!-- END DYMANICLY LOADED CSS FILES -->
+
+<!-- BEGIN THEME STYLES -->
+<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
+<link href="theme/assets/global/css/components.css" id="style_components" rel="stylesheet" type="text/css"/>
+<link href="theme/assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+<!--<link href="theme/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="theme/assets/admin/layout/css/themes/blue.css" rel="stylesheet" type="text/css" id="style_color"/>-->
+<link href="theme/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
+<link href="css/custom.css" rel="stylesheet" type="text/css"/>
+<!-- END THEME STYLES -->
+
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- END HEAD -->
+
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
+
+<body ng-controller="AppController" class="page-header-fixed page-sidebar-closed-hide-logo page-quick-sidebar-over-content page-on-load" ng-class="{'page-sidebar-closed': settings.layout.pageSidebarClosed}">
+
+    <container data-ng-include="'/restapi/widget/index_default'">
+    </container>
+	<!-- END FOOTER -->
+
+	<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+
+	<!-- BEGIN CORE JQUERY PLUGINS -->
+	<!--[if lt IE 9]>
+	<script src="theme/assets/global/plugins/respond.min.js"></script>
+	<script src="theme/assets/global/plugins/excanvas.min.js"></script>
+	<![endif]-->
+	<script src="js/plugins/jquery/jquery-2.0.2.js" type="text/javascript"></script>
+	<script src="js/plugins/moment/moment-with-locales.min.js" type="text/javascript"></script>
+	<!--<script src="js/plugins/moment/moment.min.js" type="text/javascript"></script>-->
+
+
+
+
+	<!--<script src="theme/assets/global/plugins/jquery.min.js" type="text/javascript"></script>-->
+	<script src="theme/assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
+	<script src="js/bootstrap4/bootstrap.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+	<!-- END CORE JQUERY PLUGINS -->
+
+	<!-- BEGIN CORE ANGULARJS PLUGINS -->
+	<script src="theme/assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/angularjs/angular-touch.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/angularjs/plugins/ocLazyLoad.min.js" type="text/javascript"></script>
+	<script src="theme/assets/global/plugins/angularjs/plugins/ui-bootstrap-tpls-2.5.0.min.js" type="text/javascript"></script>
+
+
+	<script src="bpmn.io/bower_components/bpmn-js/dist/bpmn-modeler.js"></script>
+	<script src="js/i18n/angular-locale_kk.js"></script>
+	<script src="js/tmhDynamicLocale.js"></script>
+	<script src="js/angular-file-upload.min.js"></script>
+	<script src="js/plugins/angular-tree-control/angular-tree-control.js"></script>
+	<script src="js/angular-pubsub.min.js"></script>
+	<script src="js/plugins/ui-select/select.min.js"></script>
+	<script src="js/plugins/chat.js/Chart.bundle.min.js"></script>
+	<script src="js/plugins/chat.js/angular-chart.js"></script>
+	<script src="js/plugins/webcam/webcam.min.js"></script>
+	<script src="js/plugins/webcam/ng-webcam.js"></script>
+
+	
+
+	<script src="js/plugins/reactjs/react.min.js"></script>
+	<script src="js/plugins/reactjs/react-dom.min.js"></script>
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>-->
+
+    <script src="js/ng-map.min.js"></script>
+	<script src="js/plugins/moment/angular-moment.min.js"></script>
+
+	<!-- END CORE ANGULARJS PLUGINS -->
+
+	<!-- BEGIN APP LEVEL ANGULARJS SCRIPTS -->
+
+	<script src="js/app.js" type="text/javascript"></script>
+	<script src="js/components.js" type="text/javascript"></script>
+	<script src="js/directives.js" type="text/javascript"></script>
+
+
+	<!-- END APP LEVEL ANGULARJS SCRIPTS -->
+
+	<!-- BEGIN APP LEVEL JQUERY SCRIPTS -->
+	<script src="theme/assets/global/scripts/metronic.js" type="text/javascript"></script>
+
+
+	<script src="theme/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
+	<script src="theme/assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
+	<script src="theme/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
+	<!--<script src="theme/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>-->
+	<script src="theme/assets/admin/pages/scripts/index.js" type="text/javascript"></script>
+	<script src="theme/assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
+
+	<script src="js/plugins/rendro-easy-pie-chart/easypiechart.min.js"></script>
+	<script src="js/plugins/rendro-easy-pie-chart/jquery.easypiechart.js"></script>
+	<script src="js/plugins/rendro-easy-pie-chart/angular.easypiechart.min.js"></script>
+
+
+	<!-- END APP LEVEL JQUERY SCRIPTS -->
+
+
+
+	<!--SERVICES -->
+	<script src="js/services/services-restapi.js" type="text/javascript"></script>
+	<script src="js/services/deal-services.js" type="text/javascript"></script>
+	<script src="js/services/services-ui-simpletable.js" type="text/javascript"></script>
+	<script src="js/services/services-dml.js" type="text/javascript"></script>
+	<script src="js/services/services-ui.js" type="text/javascript"></script>
+	<script src="js/mask.min.js" type="text/javascript"></script>
+	<script src="js/angular-bootstrap-checkbox.js" type="text/javascript"></script>
+	<script src="js/controllers/SimpleTableController.js" type="text/javascript"></script>
+	<script src="js/controllers/SimpleDetailTableController.js" type="text/javascript"></script>
+	<script src="js/services/services-eds.js" type="text/javascript"></script>
+
+	<script src="js/angular-translate.js" type="text/javascript"></script>
+	<script src="js/smart-table.min.js" type="text/javascript"></script>
+
+	<!--SERVICES -->
+	<!--flow chart temp -->
+
+	<script src="js/plugins/flowchart/svg_class.js" type="text/javascript"></script>
+	<script src="js/plugins/flowchart/mouse_capture_service.js" type="text/javascript"></script>
+	<script src="js/plugins/flowchart/dragging_service.js" type="text/javascript"></script>
+	<script src="js/plugins/flowchart/flowchart_viewmodel.js" type="text/javascript"></script>
+	<script src="js/plugins/flowchart/flowchart_directive.js" type="text/javascript"></script>
+	<!--flow chart temp -->
+
+	<!--<script src="theme/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>-->
+	<!--<script src="theme/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>-->
+	<!--<script src="theme/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>-->
+	<!--<script src="theme/assets/admin/pages/scripts/charts-flotcharts.js"></script>-->
+
+
+	<script src="js/plugins/angular-css-injector/angular-css-injector.min.js" type="text/javascript"></script>
+	
+	<script src="js/plugins/ace/ace.js" type="text/javascript"></script>
+	<script src="js/plugins/ace/ui-ace.js" type="text/javascript"></script>
+	<script src="js/plugins/ace/ext-language_tools.js" type="text/javascript"></script>
+	<script src="js/plugins/jspdf/jspdf.min.js" type="text/javascript"></script>
+	<script src="js/plugins/x2js/xml2json.min.js" type="text/javascript"></script>
+	<script src="js/plugins/x2js/json2xml.js" type="text/javascript"></script>
+	<script src="js/plugins/angular-ui-tree/angular-ui-tree.min.js" type="text/javascript"></script>
+	<script src="js/plugins/d3js/d3.v3.min.js" type="text/javascript"></script>
+	<script src="js/plugins/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js" type="text/javascript"></script>
+	<script src="js/plugins/ckeditor/angular-ckeditor.min.js"></script>
+	<script src="js/prototype.js" type="text/javascript"></script>
+
+	<script src="bpmn.io/bower_components/bpmn-js/dist/bpmn-modeler.js"></script>
+
+
+
+
+	<!--<script src="https://www.google.com/cloudprint/client/cpgadget.js">
+	</script>-->
+
+
+
+
+
+
+	<script type="text/javascript">
+		/* Init Metronic's core jquery plugins and layout scripts */
+		$(document).ready(function() {
+			Metronic.init(); // Run metronic theme
+			Metronic.setAssetsPath('theme/assets/'); // Set the assets folder path
+			Index.init();
+			Index.initCharts(); // init index page's custom scripts
+
+
+		});
+	</script>
+
+
+	<!-- END JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

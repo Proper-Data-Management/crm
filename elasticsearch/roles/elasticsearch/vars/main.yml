@@ -1,0 +1,5 @@
+---
+es_package_url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch"
+reserved_xpack_users: ["elastic","kibana","logstash_system"]
+sysd_config_file: "/etc/systemd/system/elasticsearch.service.d/override.conf"
+elk_master: "{% for host in groups['master_node'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}{% endfor %}"

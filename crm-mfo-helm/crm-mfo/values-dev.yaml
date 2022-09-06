@@ -1,0 +1,49 @@
+replicaCount: 1
+image:
+  repository: registry.dar.kz/crediton-3/crm-mfo
+  tag: N/A
+  pullPolicy: IfNotPresent
+
+nameOverride: crm-mfo
+fullnameOverride: crm-mfo
+
+# internal config name for service
+configPath: /config
+containerPort: 8080
+service:
+  type: ClusterIP
+  targetPort: 8080
+  port: 80
+
+imagePullSecrets: regcred
+
+ingress:
+  enabled: "true"
+  annotations: 
+    kubernetes.io/ingress.class: ingress
+    # kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  path: /
+  hosts:
+    - draft.example.lcl
+  # tls: 
+  #  - secretName: example-tls
+  #    hosts:
+  #      - example.local
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+enviroment: dev
+
+env:
+  PORT: 8080

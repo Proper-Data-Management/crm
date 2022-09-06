@@ -1,0 +1,32 @@
+<li ng-if="((session_roles.admin) && ($state.current.data.pageId))">
+    <a ng-href="#/settings/pagedetails/{{$state.current.data.pageId}}">
+        <i class="fa fa-pencil-square"></i> <translate>Edit Page</translate> </a>
+</li>
+<li ng-if="((session_roles.admin) && (table_name))">
+    <a ng-click="editQuery(table_name)">
+        <i class="fa fa-cube"></i> <translate>Edit Query</translate> </a>
+</li>
+<li ng-if="!getSelectRecordState()">
+    <a ng-click="selectRecords()">
+        <i class="fa fa-check-square-o"></i> <translate>Select records</translate> </a>
+</li>
+<li ng-if="getSelectRecordState()">
+    <a ng-click="deselectRecords()">
+        <i class="fa fa-circle-o"></i> <translate>Cancel Select records</translate> </a>
+</li>
+
+<li>
+
+    <a target="_self" href="../exportall/?code={{table_name}}&{{searchURL}}" download="{{table_name}}.xlsx">
+        <i class="fa fa-file-excel-o"></i> <translate>Export All Records to Excel</translate> </a>
+</li>
+
+<li ng-if="getSelectRecordState()">
+    <a ng-click="deleteSelectedRecord()">
+        <i class="fa fa-trash-o"></i> <translate>Delete selected records</translate> </a>
+</li>
+
+<li>
+    <a  ng-if="session_parameters.deleteall_enabled==1" ng-click="removeAll(table_name)">
+        <i class="fa fa-recycle"></i> <translate>Delete all records</translate> </a>
+</li>

@@ -1,0 +1,116 @@
+<div class="portlet light " ng-controller="WidgetMemberActivityCtrl">
+    <div class="portlet-title">
+        <div class="caption caption-md">
+            <i class="icon-bar-chart font-green-haze hide"></i>
+            <span class="caption-subject font-green-haze bold uppercase" translate>Member Activity</span>
+            <span class="caption-helper hide">weekly stats...</span>
+        </div>
+        <div class="actions">
+            <div class="btn-group btn-group-devided" data-toggle="buttons">
+                <label class="btn btn-transparent grey-salsa btn-circle btn-sm active">
+                    <input type="radio" name="options" class="toggle" id="option1">Today</label>
+                <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
+                    <input type="radio" name="options" class="toggle" id="option2">Week</label>
+                <label class="btn btn-transparent grey-salsa btn-circle btn-sm">
+                    <input type="radio" name="options" class="toggle" id="option2">Month</label>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row number-stats margin-bottom-30">
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="stat-left">
+                    <div class="stat-chart">
+                        <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
+                        <div id="sparkline_bar"></div>
+                    </div>
+                    <div class="stat-number">
+                        <div class="title">
+                            Total
+                        </div>
+                        <div class="number">
+                            2460
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-6">
+                <div class="stat-right">
+                    <div class="stat-chart">
+                        <!-- do not line break "sparkline_bar" div. sparkline chart has an issue when the container div has line break -->
+                        <div id="sparkline_bar2"></div>
+                    </div>
+                    <div class="stat-number">
+                        <div class="title">
+                            New
+                        </div>
+                        <div class="number">
+                            719
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-scrollable table-scrollable-borderless">
+            <table class="table table-hover table-light">
+                <thead>
+                <tr class="uppercase">
+                    <th colspan="2">
+                        MEMBER
+                    </th>
+                    <th>
+                        Earnings
+                    </th>
+                    <th>
+                        CASES
+                    </th>
+                    <th>
+                        CLOSED
+                    </th>
+                    <th>
+                        RATE
+                    </th>
+                </tr>
+                </thead>
+                <tr ng-repeat="users in widget_member_activity.users">
+                    <td class="fit">
+                        <img class="user-pic img-circle" src="../userpic/?id={{users.id}}">
+                    </td>
+                    <td>
+                        <a href="javascript:;" class="primary-link">{{users.name}}</a>
+                    </td>
+                    <td>
+                        $345
+                    </td>
+                    <td>
+                        45
+                    </td>
+                    <td>
+                        124
+                    </td>
+                    <td>
+                        <span class="bold font-green-haze">80%</span>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function WidgetMemberActivityCtrl($scope,$http){
+
+        $scope.runWidget = function runWidget(config){
+            $http.get(config.url+"&code="+config.name).
+                    success(function (data) {
+                        $scope[config.name] = data
+                    });
+        }
+
+        $scope.runWidget({name:'widget_member_activity',url:'../restapi/widget/get?bla=bla'});
+
+    }
+</script>
+

@@ -1,0 +1,43 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics"
+		 ng-init="init({currentPage:1,perPage:25,table_name:'pages'})"
+		 ng-controller="SimpleTableController">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Settings</translate>
+		</li>
+	</ul>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--SAMPLE NOTE:-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+
+				<div class="row">
+					<ng-include src="'views/settings/settings_portlets/globalsettings.html'"></ng-include>
+					<ng-include src="'views/settings/settings_portlets/crmsettings.html'"></ng-include>
+					<ng-include src="'views/settings/settings_portlets/uisettings.html'"></ng-include>
+				</div>
+				<div class="row">
+					<ng-include src="'views/settings/settings_portlets/dbsettings.html'"></ng-include>
+					<ng-include src="'views/settings/settings_portlets/accesssettings.html'"></ng-include>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<!-- END MAIN CONTENT -->

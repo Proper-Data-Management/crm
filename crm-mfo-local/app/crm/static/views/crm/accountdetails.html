@@ -1,0 +1,168 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<a href="#/crm/accounts" translate>Accounts</a>
+			<i class="fa fa-angle-right"></i>
+			<translate>{{detail.name}}</translate>
+
+		</li>
+
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button ng-if="editing" class="btn btn-primary" ng-click="save()" translate>Save</button>
+			<button ng-if="editing" class="btn btn-warning" ng-click="cancel()" translate>Cancel</button>
+			<button ng-if="!editing" class="btn btn-warning" translate>Saved</button>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE SAMPLE:.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="portlet-body form">
+						<form role="form">
+							<div class="form-body">
+								<div class="form-group">
+									<label translate>Name</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" type="text" ng-model= "detail.name" class="form-control" placeholder="{{ 'Name' | translate }}" >
+									</div>
+								</div>
+								<div ng-repeat="contacts in detail.contacts" ng-if="!contacts.deleted && contacts.cont_group=='group_email'">
+									<div class="form-group">
+										<label for="exampleInputPassword1" translate>Email</label>
+										<div class="input-group">
+											<span class="input-group-addon">
+											<i class="fa fa-wechat"></i>
+											</span>
+											<input ng-change="edit()" ng-model= "contacts.cont" class="form-control" placeholder="{{ 'Email' | translate }}" >
+											<a ng-click="deleteContact(contacts)" translate>Delete Email</a>
+										</div>
+									</div>
+								</div>
+								<a ng-click="addContact({id:0,cont:'',cont_type_id:12,cont_group:'group_email',cont_type:'email_work'})" translate>Add Email</a>
+								<div ng-repeat="contacts in detail.contacts" ng-if="!contacts.deleted && contacts.cont_group=='group_phone'">
+									<div class="form-group">
+										<label for="exampleInputPassword1" translate>Phone</label>
+										<div class="input-group">
+											<span class="input-group-addon">
+											<i class="fa fa-phone"></i>
+											</span>
+											<input ng-change="edit()" ui-mask="+9(999) 999 99 99"  ui-mask-placeholder ui-mask-placeholder-char=" "  ng-model= "contacts.cont" class="form-control" id="exampleInputPassword1"  placeholder="{{ 'Phone' | translate }}" >
+											<a ng-click="deleteContact(contacts)" translate>Delete Phone</a>
+										</div>
+									</div>
+								</div>
+								<a ng-click="addContact({id:0,cont:'',cont_type_id:1,cont_group:'group_phone',cont_type:'mobile'})" translate>Add Phone</a>
+								<div class="form-group">
+									<label for="exampleInputAddress" translate>Address</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" ng-model= "detail.address" class="form-control" id="exampleInputAddress"  placeholder="{{ 'Address' | translate }}" >
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams) {
+
+
+
+		//console.log($stateParams);
+		//console.log($stateParams.p[0]);
+
+
+		$scope.edit = function edit(){
+			$scope.editing = true;
+		}
+
+		$scope.bind = function bind(accountId){
+			$http.get('../restapi/accounts/detail?id='+accountId).
+			success(function(data) {
+				// here the data from the api is assigned to a variable named users
+
+				$scope.editing = false;
+				$scope.detail = data;
+				if (!$scope.detail.contacts)
+				{
+					$scope.detail.contacts = [];
+					$scope.addContact({id:0,cont:'',cont_type_id:1,cont_group:'group_phone',cont_type:'mobile'});
+					$scope.addContact({id:0,cont:'',cont_type_id:12,cont_group:'group_email',cont_type:'email_work'});
+				}
+
+			});
+		}
+
+		$scope.deleteContact = function deleteContact(cont){
+			cont.deleted = true;
+			$scope.edit();
+		}
+
+		$scope.addContact = function addContact(contact){
+			$scope.detail.contacts.push(contact);
+			$scope.edit();
+		}
+
+		$scope.save = function save(){
+
+			if ($scope.detail.id == 0) {
+				$http.post('../restapi/accounts/insert', {"items": [$scope.detail]}).
+						success(function (data) {
+							// here the data from the api is assigned to a variable named users
+							console.log(data);
+							location.href= "#/crm/accountdetails/"+data.items[0].id;
+						});
+			}
+			else{
+				$http.post('../restapi/accounts/update', {"items": [$scope.detail]}).
+						success(function (data) {
+							// here the data from the api is assigned to a variable named users
+							$scope.bind($stateParams.id);
+						});
+			}
+		}
+
+		$scope.cancel = function cancel(){
+			$scope.bind($stateParams.id);
+		}
+
+		$scope.bind($stateParams.id);
+
+	};
+
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->

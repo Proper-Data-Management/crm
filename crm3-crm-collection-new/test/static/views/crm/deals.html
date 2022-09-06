@@ -1,0 +1,115 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics"
+		 ng-init="init({currentPage:1,perPage:25,table_name:'deals'})"
+		 ng-controller="SimpleTableController">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Deals</translate>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<a  href="#/crm/dealdetails/0" type="button" class="btn btn-fit-height blue" >
+				<i class="fa fa-plus"></i> <translate>New Deal</translate>
+			</a>
+			<button type="button" class="btn btn-fit-height red dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true" translate>
+			Actions <i class="fa fa-angle-down"></i>
+			</button>
+			<ul class="dropdown-menu pull-right" role="menu">
+				<ng-include src="'views/blocks/simpletable-select-actions.html'" >
+				</ng-include>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--SAMPLE NOTE:-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="table-responsive">
+						<table st-table="rowCollection"  class="table table-striped">
+							<thead>
+							<tr>
+								<th translate>Title</th>
+								<th translate>Description</th>
+								<th translate>Amount</th>
+								<th translate>Account</th>
+								<th translate>Owner</th>
+								<th translate>Deal Stage</th>
+								<th translate>City</th>
+								<th translate>Region</th>
+								<th translate>Deal Type</th>
+								<th translate>Object Type</th>
+								<th translate>Category</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr ng-repeat="row in rowCollection">
+								<td>
+									<ng-include src="'views/blocks/simpletable-select-checkbox-row.html'"></ng-include>
+									<a class="btn btn-xs" href="#/crm/dealdetails/{{row.id}}/?p[]=page::{{currentPage}}"><u>{{row.title}}</u></a></td>
+								<td>{{row.dscr}}</td>
+								<td>{{row.amount}}</td>
+								<td><a href="#/crm/accountdetails/{{row.account_id}}">{{row.account}}</a></td>
+								<td><a href="#/crm/userdetails/{{row.owner_id}}">{{row.owner_name}}</a></td>
+								<td style="{{row.deal_stage_color}}">{{row.deal_stage}}</td>
+								<td>{{row.city}}</td>
+								<td>{{row.region}}</td>
+								<td>{{row.deal_type}}</td>
+								<td>{{row.object_type}}</td>
+								<td>{{row.deal_cat_id}}</td>
+							</tr>
+							</tbody>
+
+							<tfoot>
+							<tr>
+								<td colspan="5" class="text-center">
+									<div ng-include="'views/blocks/simpletable-pagination.html'"></div>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams,UISimpleTable) {
+		//Customizations
+		$scope.removeAll = function removeAll(){
+
+			if (confirm ("Remove All?"))
+			{
+				$http.get('../restapi/deals/removeall').
+				success(function(data) {
+					// here the data from the api is assigned to a variable named users
+					$scope.bind($scope.perPage,$scope.pageUrl);
+					alert("All removed!");
+				});
+			}
+		}
+
+	}
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->

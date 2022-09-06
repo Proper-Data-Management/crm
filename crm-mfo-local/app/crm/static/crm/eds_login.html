@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- saved from url=(0100)http://137.134.56.154:8080/portalserver/login/loginDashboard.jsp?redirect=/portalserver/cxp-manager# -->
+<html lang="en" data-ng-app="LoginApp"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Login</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" type="text/css" href="./assets/dashboard-all.min.css">
+        <script type="text/javascript">
+            window.bd = window.bd || {};
+            window.bd.contextRoot = '';
+        </script>
+        <script type="text/javascript" src="./assets/jquery-1.8.3.js"></script>
+		<script src="../theme/assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="./assets/jquery.cookie.js"></script>
+        <script type="text/javascript" src="./assets/loginDashboard.js"></script>
+
+<script src="../theme/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="../theme/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
+<script src="../theme/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
+<script src="../theme/assets/admin/pages/scripts/login.js" type="text/javascript"></script>
+
+
+<script src="../theme/assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
+<script src="../theme/assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>
+<script src="../theme/assets/global/plugins/angularjs/angular-touch.min.js" type="text/javascript"></script>
+<script src="../theme/assets/global/plugins/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>
+<script src="../theme/assets/global/plugins/angularjs/plugins/ocLazyLoad.min.js" type="text/javascript"></script>
+<script src="../theme/assets/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
+<!--<script src="https://code.angularjs.org/1.3.10/i18n/angular-locale_kk.js"></script>-->
+<script src="../js/angular-translate.js" type="text/javascript"></script>
+
+		<script src="./eds_login.js" type="text/javascript"></script>
+
+		<script src="../js/services/services-eds-login.js" type="text/javascript"></script>
+	</head>
+	<body  ng-controller="LoginController" class="dashboard bd-login-dashboard load" onload="bd.initLoginPage()">
+		<div class="bd-login-dashboard-bg" style="background-image: url(&quot;assets/login-background2.jpg&quot;);"></div>
+		<div class="bd-loginContainer-dashboard">
+            <div class="bd-loginContainer-dashboard-bg" style="background-image: url(&quot;assets/login-background3.jpg&quot;);"></div>
+			<div class="bd-loginContainer-dashboard-white-bg"></div>
+			<div  method="post" class="bd-loginForm-dashboard">
+
+
+			     <div class="bd-login-container">
+					 <div class="error" ng-if="loginIncorrect">
+						 ЭЦП неверен
+					 </div>
+
+
+
+
+			         <div class="bd-login-body">
+
+
+			             <div class="bd-login-input-area">
+
+						 <h1>Вход по ЭЦП</h1>
+
+						 <!--
+			                 <div class="bd-login-input-username">
+				                 <div class="icon-box">
+									 <div class="bi bi-pm-user"></div>
+								 </div>
+			                     <input ng-model="login" type="text" autocapitalize="off" placeholder="Пользователь" class="bd-login-input bd-login-username bd-autoTest-login-username" autofocus="">
+		                     </div>
+-->
+			                 <div ng-show="showPassword" class="bd-login-input-password">
+								<div class="icon-box">
+									<div class="bi bi-pm-lock"></div>
+								</div>
+
+
+
+			                     <input ng-model="pwd" type="password"  placeholder="Пароль" class="bd-login-input bd-login-password bd-autoTest-login-password">
+
+
+		                     </div>
+
+			             </div>
+						 <!--<div class="bd-login-input-area">
+							 <a href="forget.html">Забыли пароль?</a>
+						 </div>-->
+
+
+
+
+                         <div ng-show="showPassword" class="bd-login-button-area">
+							 <button ng-click="sign(pwd)" class="bc-button bc-primary bd-login-button">Войти</button>
+                         </div>
+
+                         <div class="bd-login-button-area">
+							<button ng-click="chooseEDS()" class="bc-button bc-primary bd-login-button">Выбрать ЭЦП</button>
+                         </div>
+
+
+                         </div>
+
+
+						<div style="text-align:right" class="bd-login-button-area">
+						<a href="./login.html"><strong>Вход по паролю</strong></a>
+						</div>
+
+
+
+                     </div>
+			     </div></div>
+
+
+
+
+</body></html>

@@ -1,0 +1,9 @@
+<nav ng-if="pageCount >= 1">
+    <ul class="pagination">
+        <li><a ng-click="bind(1,perPage)" translate>First</a>
+        </li><li  ng-if="currentPage > 1"><a ng-click="bind(currentPage - 1,perPage)">&lt;</a>
+    </li><li><a><page-select></page-select> <translate>of</translate> {{pageCount}}</a>
+    </li><li ng-if="pageCount > currentPage"><a ng-click="bind(currentPage + 1,perPage)">&gt;</a>
+    </li><li><a ng-click="bind(pageCount,perPage)" translate>Last</a></li>
+    </ul>
+</nav>

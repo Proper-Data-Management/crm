@@ -1,0 +1,62 @@
+stages:
+  - build_docker
+  - build_docker_bank
+  
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+
+default:
+  tags:
+    - autoscaling-runner
+
+
+.build_docker_aws:
+  rules:
+    - if: $CI_COMMIT_REF_NAME =~ /develop/
+  stage: build_docker
+  image: $AWS_CLI
+  services:
+    - name: $dind 
+      alias: docker
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - aws ecr get-login-password | docker login --username AWS --password-stdin ${ECR_URL}
+    - docker build -t "${IMAGE_TAG}" .
+    - aws ecr describe-repositories --repository-names ${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME} || aws ecr create-repository --repository-name ${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}
+    - docker push ${IMAGE_TAG}
+
+build_docker_aws:
+  extends: .build_docker_aws
+  before_script:
+    - export VERSION=$CI_COMMIT_TAG
+#    - export IMAGE_TAG=${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_TAG}
+    - export IMAGE_TAG=${ECR_URL}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_TAG}
+  rules:
+    - if: $CI_COMMIT_TAG
+
+
+
+.build_docker_gitlab:
+  stage: build_docker_bank
+  rules:
+    - if: $CI_COMMIT_REF_NAME =~ /develop/
+  image: docker:18.09-dind
+  services:
+    - docker:dind 
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker login -u "$BANK_REGISTRY_USER" -p "$BANK_REGISTRY_PASS" $BANK_REGISTRY
+    - docker build -t "${IMAGE_TAG_BANK}" .
+    - docker push "${IMAGE_TAG_BANK}"
+
+build_docker_bank:
+  extends: .build_docker_gitlab
+  before_script:
+    - export IMAGE_TAG_BANK=${BANK_REGISTRY}/app_crm:${CI_COMMIT_TAG}
+ # rules:
+ #   - if: $CI_COMMIT_TAG

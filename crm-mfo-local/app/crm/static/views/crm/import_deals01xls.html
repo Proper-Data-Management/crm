@@ -1,0 +1,103 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<translate>Import Deals From Excel (xlsx)</translate>
+		</li>
+	</ul>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE: The below datatable is not connected to a real database so the filter and sorting is just simulated for demo purposes only.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="portlet-body form">
+						<form role="form">
+							<div class="form-body">
+								<input type="file" nv-file-select uploader="uploader"/><br/>
+								<div class="modal-footer">
+									<ul>
+										<li ng-repeat="item in uploader.queue">
+											Name: <span ng-bind="item.file.name"></span><br/>
+
+
+											<div ng-if="item.result.result">
+												<div>Result {{item.result.result}}</div>
+												<div>Ok Count {{item.result.ok_cnt}}</div>
+												<div>Err Count {{item.result.err_cnt}}</div>
+												<div>Skip Count {{item.result.skip_cnt}}</div>
+											</div>
+											<button class="btn btn-primary" ng-click="item.upload()" translate>Import</button>
+										</li>
+									</ul>
+
+								</div>
+							</div>
+
+						</form>
+					</div>
+
+
+
+						<!--<div ng-show="selected">Selection from a modal: {{ selected }}</div>-->
+
+
+
+
+
+
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log,FileUploader) {
+
+
+		$scope.uploader = new FileUploader({ url: '../upload?action=import_deals01_xls'});
+
+
+		$scope.uploader.onBeforeUploadItem = function(item) {
+			Metronic.startPageLoading();
+		};
+
+		$scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
+			//console.info('onCompleteItem', fileItem, response, status, headers);
+
+			//alert(response.result);
+			fileItem.result=response;
+			Metronic.stopPageLoading();
+
+		};
+
+		$scope.file = {}
+
+		$scope.import = function () {
+
+			alert("import bebebe");
+			file.$upload('uploader.php', $scope.file)
+		}
+		};
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->

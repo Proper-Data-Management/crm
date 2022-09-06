@@ -1,0 +1,39 @@
+baseURL = "/"
+languageCode = "en-US"
+title = "Hugo Learn Documentation"
+theme = "learn"
+
+
+
+
+[params]
+  description = "Documentation for Hugo Learn Theme"
+  author = "Mathieu Cornic"
+  showVisitedLinks = true
+  disableBreadcrumb = false
+  disableNextPrev = false
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+[[Languages]]
+title = "Documentation for Hugo Learn Theme"
+weight = 1
+languageName = "English"
+
+[[Languages.menu.shortcuts]]
+name = "<i class='fab fa-fw fa-github'></i> Github repo"
+identifier = "ds"
+url = "https://github.com/matcornic/hugo-theme-learn"
+weight = 10
+
+[[Languages.menu.shortcuts]]
+name = "<i class='fas fa-fw fa-camera'></i> Showcases"
+url = "showcase"
+weight = 11
+
+[[Languages.menu.shortcuts]]
+name = "<i class='fas fa-fw fa-bookmark'></i> Hugo Documentation"
+identifier = "hugodoc"
+url = "https://gohugo.io/"
+weight = 20

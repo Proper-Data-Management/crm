@@ -1,0 +1,80 @@
+<!-- BEGIN REGIONAL STATS PORTLET-->
+<div class="portlet light " ng-controller="WidgetDealJrn">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-share font-green-haze"></i>
+            <span class="caption-subject font-green-haze bold uppercase" translate>Activities</span>
+        </div>
+        <div class="actions">
+            <div class="btn-group">
+                <a class="btn btn-sm btn-default btn-circle" href="#" data-toggle="dropdown" dropdown-menu-hover data-close-others="true">
+                    Filter By <i class="fa fa-angle-down"></i>
+                </a>
+                <div class="dropdown-menu hold-on-click dropdown-checkboxes pull-right">
+                    <label><input type="checkbox"/> Finance</label>
+                    <label><input type="checkbox" checked=""/> Membership</label>
+                    <label><input type="checkbox"/> Customer Support</label>
+                    <label><input type="checkbox" checked=""/> HR</label>
+                    <label><input type="checkbox"/> System</label>
+                </div>
+            </div>
+            <a class="btn btn-circle btn-icon-only btn-default fullscreen" href="#">
+            </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
+            <ul class="feeds">
+                <li ng-repeat="item in widget_deal_op_jrn.details">
+                    <div class="col1">
+                        <div class="cont">
+                            <div class="cont-col1">
+                                <div class="label label-sm label-info">
+                                    <i class="{{item.icon}}"></i>
+                                </div>
+                            </div>
+                            <div class="cont-col2">
+                                <div class="desc">
+                                  {{item.title}} <span class="label label-sm label-warning ">
+												{{item.user_name}}
+												</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col2">
+                        <div class="date">
+                            {{item.extime}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="scroller-footer">
+            <div class="btn-arrow-link pull-right">
+                <a href="#">See All Records</a>
+                <i class="icon-arrow-right"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END REGIONAL STATS PORTLET-->
+
+<script type="text/javascript">
+
+    function WidgetDealJrn($scope,$http,dealService){
+
+        $scope.runWidget = function runWidget(config){
+            $http.get(config.url+"&code="+config.name).
+                    success(function (data) {
+                        $scope[config.name] = data
+                    });
+        }
+//        alert(dealService.getId());
+
+        $scope.runWidget({name:'widget_deal_op_jrn',url:'../restapi/widget/get?deal_id='+dealService.getId()});
+    }
+
+
+
+</script>

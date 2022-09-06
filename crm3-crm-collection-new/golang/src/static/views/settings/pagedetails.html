@@ -1,0 +1,213 @@
+<!-- BEGIN PAGE HEADER-->
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<i class="fa fa-home"></i>
+			<i class="fa fa-angle-right"></i>
+			<a href="#/settings/pages" translate>Pages</a>
+			<i class="fa fa-angle-right"></i>
+			<translate>{{detail.title}}</translate>
+
+		</li>
+
+	</ul>
+	<div class="page-toolbar">
+		<div class="btn-group pull-right">
+			<button ng-if="editing" class="btn btn-primary" ng-click="save()" translate>Save</button>
+			<button ng-if="editing" class="btn btn-warning" ng-click="cancel()" translate>Cancel</button>
+			<button ng-if="!editing" class="btn btn-warning" translate>Saved</button>
+		</div>
+	</div>
+</div>
+<!-- END PAGE HEADER-->
+<!-- BEGIN MAIN CONTENT -->
+<div class="row">
+	<div class="col-md-12">
+		<!--<div class="note note-danger">-->
+			<!--<p>-->
+				<!--NOTE SAMPLE:.-->
+			<!--</p>-->
+		<!--</div>-->
+		<!-- Begin: life time stats -->
+		<div class="portlet">
+			<div class="portlet-body">
+				<div class="table-container">
+					<div class="portlet-body form">
+						<form role="form">
+							<div class="form-body">
+								<div class="form-group">
+									<label translate>Title</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" ng-model= "detail.title" class="form-control" placeholder="{{ 'Name' | translate }}" >
+									</div>
+								</div>
+								<div class="form-group">
+									<label translate>URL</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" type="text" ng-model= "detail.url" class="form-control" placeholder="{{ 'Name' | translate }}" >
+									</div>
+								</div>
+
+								<div ng-if = "detail.db_template == 0" class="form-group">
+									<label translate>Template URL</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+										<i class="fa fa-user"></i>
+										</span>
+										<input ng-change="edit()" type="text" ng-model= "detail.templateurl" class="form-control" placeholder="{{ 'Name' | translate }}" >
+									</div>
+								</div>
+
+								<div class="form-group" >
+									<label for="pageTypeSelect" translate>Page Type</label>
+									<select ng-change="edit()" class="form-control" name="mySelect" id="pageTypeSelect"
+											ng-options="option.name for option in pageTypeSelect.availableOptions track by option.id"
+											ng-model="detail._page_type_select"></select>
+								</div>
+								<div class="form-group" >
+									<label  translate>DB Template</label>
+									<checkbox id="activeInput" ng-model="detail.db_template"  ng-change="edit()"  ng-true-value="1"   ng-false-value="0"  class="btn-primary" />
+								</div>
+								<div ng-if = "detail.db_template == 1" class="form-group" >
+									<label for="pageTypeSelect" translate>HTML template</label>
+
+									<div style=" height: 400px; "
+										 ng-model="detail.template"
+										 ng-change="edit()"
+										 ui-ace="{
+									useWrapMode : true,
+									showGutter: false,
+									theme:'twilight',
+									mode: 'html',
+									firstLineNumber: 5,
+									onLoad: aceLoaded,
+									onChange: aceChanged
+									}">test</div>
+								</div>
+
+
+
+
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End: life time stats -->
+	</div>
+</div>
+</section>
+
+<script type="text/javascript">
+
+
+	function basicsCtrl($scope, $http,$modal,$log,$stateParams) {
+
+
+
+		//console.log($stateParams);
+		//console.log($stateParams.p[0]);
+
+
+		$scope.edit = function edit(){
+			$scope.editing = true;
+		}
+
+		$scope.changeCompany = function(){
+			$scope.edit();
+			$scope.bindDept();
+
+		}
+
+		$scope.bindDept = function(){
+			$http.get('../restapi/query/get?code=depts_select&param1='+$scope.detail._company_id_select.id).
+			success(function(data) {
+
+				$scope.deptSelect = [];
+				$scope.deptSelect.availableOptions = data.items;
+				$scope.detail._dept_id_select={id: $scope.detail.dept_id, name: ""};
+			});
+		}
+
+		$scope.pageTypeBind = function(){
+			$http.get("../restapi/query/get?code=page_types_select").
+			success(function(data) {
+
+				$scope.pageTypeSelect = [];
+				$scope.pageTypeSelect.availableOptions = data.items;
+				$scope.detail._page_type_select={id: $scope.detail.page_type_id, name: ""};
+			});
+		}
+
+
+
+		$scope.bind = function bind(id){
+			$http.get('../restapi/detail?code=pages&id='+id).
+			success(function(data) {
+				// here the data from the api is assigned to a variable named users
+
+				$scope.pageTypeBind();
+				$scope.editing = false;
+				$scope.detail = {};
+				$scope.detail.id = id;
+				if (id!=0) {
+					$scope.detail = data.pages[0];
+				}
+
+			});
+		}
+
+
+		$scope.save = function save(){
+			$scope.detail._table_name_ = "pages";
+			$scope.detail.page_type_id = $scope.detail._page_type_select.id;
+
+			//$scope.detail.company_id = $scope.detail._company_id_select.id;
+			//$scope.detail.dept_id = $scope.detail._dept_id_select.id;
+
+				$http.post('../restapi/update', {"items": [$scope.detail]}).
+					success(function (data) {
+
+						if (data.error!="0")
+						{
+							alert("Ошибка при сохранении");
+							return;
+						}
+						if ($scope.detail.id == 0) {
+							location.href = "#/settings/pagedetails/" + data.items[0].id;
+						}else{
+							$scope.bind($stateParams.id);
+						}
+					});
+			}
+
+		$scope.cancel = function cancel(){
+			$scope.bind($stateParams.id);
+		}
+
+		$scope.bind($stateParams.id);
+
+
+		$scope.aceChanged = function(e){
+			console.log(e)
+		}
+
+	};
+
+
+
+
+
+
+
+</script>
+
+<!-- END MAIN CONTENT -->
